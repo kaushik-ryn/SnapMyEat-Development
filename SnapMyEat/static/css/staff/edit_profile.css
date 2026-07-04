@@ -1,0 +1,68 @@
+.profile-container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.profile-header {
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.template-selection {
+  margin-top: 2rem;
+}
+
+.template-card {
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+  cursor: pointer;
+}
+
+.template-card.selected {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(108, 86, 72, 0.25);
+}
+
+.template-card .template-radio {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.template-card .template-name {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.template-card .template-description {
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+.template-card.premium {
+  position: relative;
+  overflow: hidden;
+}
+
+.template-card.premium::after {
+  content: "Premium";
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  border-bottom-left-radius: 0.5rem;
+}

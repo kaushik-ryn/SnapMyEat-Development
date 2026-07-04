@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SnapMyEat - Verify OTP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'css/otp.css' %}">
+</head>
+<body>
+  <div class="container">
+    <div class="image-section">
+      <img src="https://img.freepik.com/premium-vector/italian-chef-holding-pizza-hand-drawn-sketch-restaurant-business-concept-logo-vector-illustration_666729-476.jpg?w=2000" alt="Chef Illustration" />
+    </div>
+    <div class="form-section">
+      <h2>SnapMyEat</h2>
+      <form method="POST" id="otpForm">
+        {% csrf_token %}
+        <label for="otp">Enter OTP</label>
+        <div class="otp-inputs">
+          <input type="text" maxlength="1" class="otp-box"/>
+          <input type="text" maxlength="1" class="otp-box"/>
+          <input type="text" maxlength="1" class="otp-box"/>
+          <input type="text" maxlength="1" class="otp-box"/>
+          <input type="text" maxlength="1" class="otp-box"/>
+          <input type="text" maxlength="1" class="otp-box"/>
+        </div>
+        <input type="hidden" name="otp" id="otp">
+        <button type="submit">Verify OTP</button>
+      </form>
+
+      <div class="resend">
+        Didn't receive? 
+        <a href="#" id="resendLink" onclick="resendOTP()">Resend OTP</a>
+        <span id="countdown" style="margin-left: 10px;"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    a CRE8MARK production
+  </div>
+
+  <script>
+
+    document.getElementById('otpForm').addEventListener('submit', function (e) {
+      const boxes = document.querySelectorAll('.otp-box');
+      const otp = Array.from(boxes).map(box => box.value).join('');
+      document.getElementById('otp').value = otp;
+      console.log(document.getElementById('otp').value);
+      
+    });
+
+
+    let resendLink = document.getElementById("resendLink");
+    let countdownSpan = document.getElementById("countdown");
+    let timer;
+
+    function resendOTP() {
+      alert("OTP has been sent to your email!");
+      startCountdown(30);
+    }
+
+    function startCountdown(seconds) {
+      resendLink.classList.add("disabled");
+      let remaining = seconds;
+
+      countdownSpan.innerText = `(${remaining}s)`;
+
+      timer = setInterval(() => {
+        remaining--;
+        if (remaining > 0) {
+          countdownSpan.innerText = `(${remaining}s)`;
+        } else {
+          clearInterval(timer);
+          countdownSpan.innerText = "";
+          resendLink.classList.remove("disabled");
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>

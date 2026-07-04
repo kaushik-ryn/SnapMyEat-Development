@@ -1,0 +1,27 @@
+.dashboard-card h3 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-card .arrow {
+  margin-left: 0.5rem;
+}
+
+.dots-container {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+}
+
+.dashboard-card {
+  position: relative;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.upgrade-plan-container {
+  margin-top: 2rem;
+  text-align: center;
+}

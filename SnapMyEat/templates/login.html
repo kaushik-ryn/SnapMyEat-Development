@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SnapMyEat - Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+  <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+<div id="intro" class="intro-overlay">
+  <h1 class="intro-text">SnapMyEat</h1>
+</div>
+<div class="container" id="mainContainer">
+
+    <!-- Left Panel -->
+    <div class="box bx1">
+
+     
+    </div>
+
+    <!-- Right Panel (Login) -->
+    <div class="box bx2">
+      <h1 id="login-heading" style="color: #f6bf5a; margin-bottom: 20px;"></h1>
+
+
+      <!-- Alert Message -->
+      <div id="alertBox"></div>
+
+      <form method="POST" action="{% url 'management-login' %}">
+        {% csrf_token %}
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required />
+
+        <label for="password">Password</label>
+        <div class="input-group">
+          <input type="password" id="password" name="password" required />
+          <span onclick="togglePassword()">
+            <i data-feather="eye" id="eye-icon"></i>
+          </span>
+        </div>
+
+        <button type="submit" class="btn">Login</button>
+      </form>
+
+      <div class="links">
+        <a href="{% url 'forgot-password' %}">Forgot Password?</a>
+      </div>
+    </div>
+  </div>
+<footer class="footer">
+  a <strong>CRE8MARK</strong> production
+</footer>
+
+<script>
+feather.replace();
+
+function togglePassword() {
+  const password = document.getElementById("password");
+  const icon = document.getElementById("eye-icon");
+  if (password.type === "password") {
+    password.type = "text";
+    icon.setAttribute("data-feather", "eye-off");
+  } else {
+    password.type = "password";
+    icon.setAttribute("data-feather", "eye");
+  }
+  feather.replace();
+}
+
+
+window.addEventListener("load", () => {
+  const intro = document.getElementById("intro");
+  const container = document.getElementById("mainContainer");
+  const heading = document.getElementById("login-heading");
+  const messages = ["Login", "SnapMyEat"];
+  let messageIndex = 0;
+
+  function animateText(text, callback) {
+    heading.innerHTML = "";
+    [...text].forEach((char, i) => {
+      const span = document.createElement("span");
+      span.textContent = char;
+      span.style.animationDelay = `${i * 0.1}s`;
+      span.style.opacity = "0";
+      span.style.display = "inline-block";
+      span.style.animation = "appear 0.5s forwards";
+      heading.appendChild(span);
+    });
+
+    setTimeout(() => {
+      callback();
+    }, text.length * 100 + 1500); 
+  }
+
+  function loopMessages() {
+    animateText(messages[messageIndex], () => {
+      messageIndex = (messageIndex + 1) % messages.length;
+      loopMessages();
+    });
+  }
+
+  setTimeout(() => {
+    intro.classList.add("hide");
+
+    setTimeout(() => {
+      container.classList.add("visible");
+      loopMessages(); 
+    }, 1000);
+  }, 2000);
+});
+</script>
+
+</body>
+</html>

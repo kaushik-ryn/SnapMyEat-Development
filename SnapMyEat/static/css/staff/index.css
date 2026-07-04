@@ -1,0 +1,237 @@
+:root {
+  --primary-color: #6c5648;
+  --secondary-color: #f8a9a3;
+  --light-bg: #f8f9fa;
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  background-color: var(--light-bg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+.navbar {
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.sidebar {
+  min-height: calc(100vh - 56px);
+  padding-top: 1rem;
+}
+
+.sidebar .nav-link {
+  color: #6c757d;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s;
+}
+
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+  background-color: rgba(108, 86, 72, 0.1);
+  color: var(--primary-color);
+}
+
+.sidebar .nav-link i {
+  margin-right: 0.5rem;
+  color: var(--primary-color);
+}
+
+.content {
+  padding: 2rem;
+}
+
+.dashboard-card {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.2s;
+  height: 100%;
+  cursor: pointer;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+}
+
+.dashboard-card .card-body {
+  padding: 2rem;
+}
+
+.dashboard-card h3 {
+  color: var(--primary-color);
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.dashboard-card i {
+  font-size: 2rem;
+  color: var(--secondary-color);
+  margin-bottom: 1rem;
+}
+
+.dashboard-card .arrow {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+}
+
+.dashboard-card .dots {
+  color: var(--secondary-color);
+  font-size: 1.5rem;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+  background-color: #5a4839;
+  border-color: #5a4839;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(108, 86, 72, 0.25);
+}
+
+.badge-veg {
+  background-color: #28a745;
+  color: white;
+}
+
+.badge-non-veg {
+  background-color: #dc3545;
+  color: white;
+}
+
+.go-back {
+  display: inline-flex;
+  align-items: center;
+  color: var(--primary-color);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 0.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.go-back:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.table-responsive {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(108, 86, 72, 0.05);
+}
+
+.search-box {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.search-box i {
+  position: absolute;
+  top: 12px;
+  left: 15px;
+  color: #6c757d;
+}
+
+.search-box input {
+  padding-left: 40px;
+  border-radius: 1.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .content {
+    padding: 1rem;
+  }
+
+  .sidebar {
+    min-height: auto;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Upgrade plan button */
+.upgrade-plan {
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  border: 1px solid var(--primary-color);
+  border-radius: 0.25rem;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.upgrade-plan:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.upgrade-plan i {
+  color: #ffc107;
+  margin-left: 0.5rem;
+}
+
+a {
+  text-decoration: none;
+}
+
+.logout {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.logout-text {
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 13px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.logout:hover .logout-text {
+  opacity: 1;
+  transform: translateX(-50%) translateY(2px);
+}
+
+@media (max-width: 576px) {
+  .logout-btn {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+
+  .logout-btn span {
+    display: none; /* hide text on small screen */
+  }
+
+  .profile-icon div {
+    width: 30px !important;
+    height: 30px !important;
+  }
+}

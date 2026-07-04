@@ -1,0 +1,63 @@
+.serachBg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #ffffffb2;
+  z-index: 9999;
+  display: none; 
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+/* Show it when active */
+.serachBg.active {
+  display: flex;
+  opacity: 1;
+}
+
+.serachBg .close-btn {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 18px;
+  cursor: pointer;
+  color: #333;
+}
+
+/* Input and button styling */
+.serachBg form {
+  display: flex;
+  margin-top: 50%;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.serachBg input[type="text"] {
+  padding: 12px 15px;
+  font-size: 16px;
+  border: 1px solid #C79E07;
+  border-radius: 8px;
+}
+
+.serachBg button {
+  padding: 12px;
+  font-size: 16px;
+  background-color: #C79E07;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.serachBg button:hover {
+  background-color: #ac8d1c;
+}

@@ -1,0 +1,58 @@
+.ds-cus{
+    text-align: center;
+    background-color: #007BFF;
+    padding-top: 10%;
+    color: #ffffff;
+}
+
+.order-sum{
+    width: 90%;
+    margin: auto;
+}
+
+.summary{
+    display: flex;
+}
+
+.summary-item{
+    width: 60%;
+}
+
+/* _______ */
+.total-item{
+    font-size: 1.5rem;
+}
+
+/* _____________ */
+.product-summary{
+    background-color: #ffffff;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+    padding: 2%;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 5%;
+}
+
+.pdr-bg-color{
+    background-color: #F8F9FA;
+}
+
+/* ______________ */
+
+.order-final-btn{
+    background-color: #28A745;
+    color: #F8F9FA;
+}
+.order-final-btn:hover{
+    background-color: #43db67;
+}
+.order-final-btn:active{
+    background-color: #43db67;
+}
+
+
+/* __________________________ */
+
+.final-payment{
+    width: 40%;
+}

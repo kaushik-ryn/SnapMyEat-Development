@@ -1,0 +1,61 @@
+.nav-tabs {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.nav-tabs .nav-link {
+  font-weight: 500;
+  color: #6c757d;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 2px solid transparent;
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.search-box {
+  margin-bottom: 1.5rem;
+}
+
+table th {
+  font-weight: 500;
+  color: #6c757d;
+}
+
+.category-actions .btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.btn-edit {
+  background-color: #e9ecef;
+  color: #495057;
+  border-radius: 1rem;
+}
+
+.btn-edit:hover {
+  background-color: #dee2e6;
+}
+
+.add-category-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.add-category-btn:hover {
+  background-color: #5a4839;
+}

@@ -1,0 +1,500 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{restInstance.name}} - Menu Items</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Feather Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="{% static 'css/staff/index.css' %}?v=3" />
+  <link rel="stylesheet" href="{% static 'css/staff/items.css' %}?v=3" />
+  <link rel="stylesheet" href="{% static 'css/staff/footer.css' %}" />
+</head>
+
+<body>
+  <style>
+    html,
+    body {
+      overflow: auto;
+      -ms-overflow-style: none;
+      /* Internet Explorer 10+ */
+      scrollbar-width: none;
+      /* Firefox */
+    }
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      display: none;
+      /* Chrome, Safari, Opera */
+    }
+  </style>
+  <style>
+    .profile-icon-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .change-dp-btn {
+      position: absolute;
+      bottom: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #212529;
+      color: #fff;
+      padding: 5px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      display: none;
+      cursor: pointer;
+      white-space: nowrap;
+      z-index: 999;
+    }
+
+    .profile-icon-wrapper:hover .change-dp-btn {
+      display: block;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    .size-error {
+      color: red;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .badge-type.drink {
+      background-color: #0dcaf0; /* cyan-blue */
+    }
+  </style>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'management-home' restID %}">{{restInstance.name}}</a>
+      <div class="d-flex align-items-center" style="padding-right: 10px;">
+        <div class="profile-icon-wrapper">
+          <a class="profile-icon d-flex align-items-center justify-content-center text-white me-2"
+            href="{% url 'management-profile' restID %}" style="cursor:pointer;">
+            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center"
+              style="width: 35px; height: 35px; overflow: hidden;">
+              <img id="profilePreview" src="{{restInstance.display_picture.url}}" alt="DP"
+                style="width: 100%; height: 100%; object-fit: cover;" />
+            </div>
+          </a>
+        </div>
+
+        <div class="logout">
+          <a href="{% url 'management-logout' restID %}">
+            <div class="logout">
+              <img width="20" height="20" src="https://img.icons8.com/ios/50/exit--v1.png" alt="exit--v1" />
+              <span class="logout-text">Logout</span>
+            </div>
+          </a>
+        </div>
+      </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-md-2 d-none d-md-block sidebar" style="padding-top: 6rem;">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'management-home' restID %}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="feather feather-home">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+              <span class="ms-2 d-none d-md-inline">Home</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'management-orders' restID %}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="feather feather-shopping-bag">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              <span class="ms-2 d-none d-md-inline">Orders</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="{% url 'management-menu' restID %}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="feather feather-menu">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+              <span class="ms-2 d-none d-md-inline">Menu</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'management-table' restID %}">
+              <img width="18" height="18" src="https://img.icons8.com/material-outlined/24/qr-code.png" alt="qr-code" />
+              <span class="ms-2 d-none d-md-inline">Table/QR</span>
+
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'management-insights' restID %}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="feather feather-bar-chart-2">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+              <span class="ms-2 d-none d-md-inline">Insight</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Mobile sidebar (visible only on small screens) -->
+      <div class="col-12 d-md-none mb-3">
+        <div class="navbar navbar-expand navbar-light bg-transparent shadow-none rounded p-3">
+          <ul class="navbar-nav w-100 justify-content-between">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'management-home' restID %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="feather feather-home">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'management-orders' restID %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="feather feather-shopping-bag">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <path d="M16 10a4 4 0 0 1-8 0"></path>
+                </svg>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'management-menu' restID %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="feather feather-menu">
+                  <line x1="3" y1="12" x2="21" y2="12"></line>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'management-table' restID %}">
+                <img width="18" height="18" src="https://img.icons8.com/material-outlined/24/qr-code.png"
+                  alt="qr-code" />
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'management-insights' restID %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="feather feather-bar-chart-2">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Main content -->
+      <div class="col-md-10 content">
+        <h2 class="orders-title" style="padding-left:40px; font-weight: bold;">Menu - Items</h2>
+        <br>
+        <div class="container">
+          <!-- Tabs for Items/Categories -->
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'management-menu' restID %}">Items</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'management-category' restID %}">Categories</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'management-tags' restID %}">Tags</a>
+            </li>
+          </ul>
+
+          <!-- Search Box -->
+          <div class="search-box">
+            <form method="get" action="{% url 'management-menu' restID %}">
+              <div class="input-group">
+                <span class="input-group-text bg-white border-end-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-search">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </span>
+                <input type="text" name="search" class="form-control border-start-0" style="padding-left: 0px;"
+                  placeholder="Search by item name or item id" value="{{query}}" />
+                <button class="btn btn-outline-secondary" type="submit">
+                  Search by
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Filter Options -->
+          {% if all_tags %}
+          <div class="filter-options mb-4">
+            <a href="?{% if query %}search={{ query }}&{% endif %}"
+              class="filter-badge {% if not tag %}active{% endif %}">All</a>
+            {% for tags in all_tags %}
+            <a href="?tag={{ tags.name }}{% if query %}search={{ query }}&{% endif %}"
+              class="filter-badge {% if tag == tags.name %}active{% endif %}">{{tags.name}}</a>
+            {% endfor %}
+            <a href="?tag=__notag__{% if query %}&search={{ query }}{% endif %}"
+              class="filter-badge {% if tag == '__notag__' %}active{% endif %}">No Tag</a>
+          </div>
+          {% endif %}
+
+          <!-- Items Table -->
+          {% if menu_items %}
+          <div class="table-responsive" style="overflow-x: auto; white-space: nowrap;">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Item id</th>
+                  <th>Name</th>
+                  <th>Tag</th>
+                  <th>Type</th>
+                  <th>Prices / sizes</th>
+                  <th>Remove</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in menu_items %}
+                <tr>
+                  <td>{{item.id|stringformat:"03d"}}</td>
+                  <td>{{item.name}}</td>
+                  <td>
+                    <ul class="list-unstyled mb-0">
+                      {% if item.tags %}
+                      {% for tag in item.tags %}
+                      <li>{{ tag }}</li>
+                      {% endfor %} {% else %}
+                      <li> --- </li>
+                      {% endif %}
+                    </ul>
+                  </td>
+                  <td>  
+                    {% if item.type == "Veg" %}
+                      <span class="badge-type veg">Veg</span>
+                    {% elif item.type == "Non Veg" %}
+                      <span class="badge-type non-veg">Non-Veg</span>
+                    {% else %}
+                      <span class="badge-type drink">Drink</span>
+                    {% endif %}
+                  </td>
+
+                  <td>
+                    <ul class="list-unstyled mb-0">
+                      {% for sizes in item.sizes %}
+                      <li class="{% if sizes.is_default %}default-size{% endif %}">
+                        ₹{{ sizes.price }} : {{ sizes.size }}
+
+                      </li>
+                      {% endfor %}
+                    </ul>
+                  </td>
+                  <td>
+                    <ul class="list-unstyled mb-0">
+                      <button class="btn del-button" type="submit" data-tagid="{{ item.id }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25"
+                          viewBox="0 0 50 50">
+                          <path
+                            d="M 21.800781 10.099609 C 20.916781 10.099609 20.199219 10.815219 20.199219 11.699219 L 20.199219 12.099609 L 9.8007812 12.099609 C 9.5247813 12.099609 9.3007812 12.323609 9.3007812 12.599609 C 9.3007812 12.875609 9.5247813 13.099609 9.8007812 13.099609 L 11.740234 13.099609 L 13.857422 38.507812 C 14.017422 40.410812 15.636922 41.900391 17.544922 41.900391 L 32.455078 41.900391 C 34.363078 41.900391 35.982625 40.410812 36.140625 38.507812 L 38.257812 13.099609 L 40.199219 13.099609 C 40.476219 13.099609 40.699219 12.875609 40.699219 12.599609 C 40.699219 12.323609 40.475219 12.099609 40.199219 12.099609 L 29.800781 12.099609 L 29.800781 11.699219 C 29.800781 10.815219 29.083219 10.099609 28.199219 10.099609 L 21.800781 10.099609 z M 12.742188 13.099609 L 37.255859 13.099609 L 35.144531 38.423828 C 35.028531 39.812828 33.848078 40.900391 32.455078 40.900391 L 17.542969 40.900391 C 16.150969 40.900391 14.969516 39.811828 14.853516 38.423828 L 12.742188 13.099609 z">
+                          </path>
+                        </svg>
+                      </button>
+                    </ul>
+                  </td>
+                  <td class="text-end">
+                    <a href="{% url 'management-menu-edit' restID item.id %}" class="btn btn-edit" target="_blank">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="feather feather-edit-2">
+                        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                      </svg>
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div style="margin: auto; width: 90%; text-align: center;">
+            <img style="width: 20%; margin: auto;" src="{% static 'images/not-found.png' %}" alt="Not found" srcset="">
+            <br>
+            <span style="font-weight: 600;"> Oops! We couldn't find any matching dishes. Explore other delicious
+              options!</span>
+          </div>
+          {% endif %}
+
+          <!-- Add Item Button (Floating) -->
+          <a href="{% url 'management-menu-add' restID %}" class="add-item-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="feather feather-plus">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="footer">a <strong>CRE8MARK</strong> production</footer>
+
+  <!-- NEW ORDER RECEIVED NOTIFICATION -->
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 1055">
+    <div id="newOrderToast" class="toast bg-success text-white" role="alert" data-bs-delay="5000">
+      <div class="toast-body">
+        🛎️ <strong>New Order Received!</strong> Check the Preparing tab.
+      </div>
+    </div>
+  </div>
+
+  <!-- WAITER CALLING NOTIFICATION -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
+    <div id="waiterToast" class="toast bg-success text-white" role="alert" data-bs-delay="5000">
+      <div class="toast-body">
+        🛎 Waiter called at <strong>Table <span id="waiterTable"></span></strong>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .default-size {
+      color: #8B5E3C;
+      /* color: #f25c54; */
+      font-weight: 700;
+    }
+  </style>
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- DEL ITEM -->
+  <script>
+    document.querySelectorAll('.del-button').forEach((btn) => {
+      btn.addEventListener("click", function () {
+        const tagID = this.dataset.tagid;
+        if (!confirm("Are you sure you want to delete this item?")) return;
+
+
+        fetch(`items/del/${tagID}`, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/json",
+          },
+        })
+          .then(response => {
+            if (response.redirected) {
+              window.location.href = response.url;
+            } else if (response.ok) {
+              // window.location.href = "{% url 'management-menu' restID %}";
+              const row = btn.closest("tr");
+              row.remove();
+            } else {
+              alert("Failed to delete item.");
+            }
+          })
+          .catch(error => {
+            console.error("Error:", error);
+            alert("Something went wrong.");
+          });
+
+      })
+    });
+
+  </script>
+
+<!-- ORDER AND WAITER SOCKET -->
+  <script>
+    document.addEventListener("DOMContentLoaded",()=>{
+      function trackNewOrder(orderId) {
+        let stored = JSON.parse(localStorage.getItem("new_orders") || "[]");
+        if (!stored.includes(orderId)) {
+          stored.push(orderId);
+          localStorage.setItem("new_orders", JSON.stringify(stored));
+        }
+      }
+
+
+      // WebSocket setup
+      window.addEventListener("load", () => {
+        const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+        const liveMessageSocket = new WebSocket(`${wsScheme}://${window.location.host}/ws/live/message/socket/{{ restID }}/`)
+
+        liveMessageSocket.onopen = () => console.log("liveMessage WebSocket connected");
+        liveMessageSocket.onclose = () => console.warn("liveMessage WebSocket closed");
+        liveMessageSocket.onerror = (e) => console.error("liveMessage WebSocket error", e);
+        
+
+        // Socket Connection for Order & Waiter Call both
+        liveMessageSocket.onmessage = (event) =>{
+          try{
+            const data = JSON.parse(event.data);
+            if (data.type === "order_notification") {
+              const order = data.order;
+              if (!order) return;
+
+              // Show toast
+              const toastEl = document.getElementById('newOrderToast');
+              if (toastEl) new bootstrap.Toast(toastEl).show();
+
+              trackNewOrder(order.id);
+            }
+            
+            else if (data.type === "waiter_notification") {
+              const tableNo = data.table;
+              
+              const waiterToast = document.getElementById("waiterToast");
+              const waiterTableSpan = document.getElementById("waiterTable");
+
+              if (waiterToast && waiterTableSpan) {
+                waiterTableSpan.textContent = tableNo;
+                new bootstrap.Toast(waiterToast).show();
+              }
+            }
+          
+          }catch (err) {
+            alert("[WS] Message parse error:", err)
+            console.error("[WS] Message parse error:", err);
+          }
+        }
+      });
+    });
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,53 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.img-bg{
+    /* background-image: url('./images/food.jpg'); */
+    background:  url('/static/images/modern/dsdsbgimg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100vw;
+    height: 60vh;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+p{
+    margin-bottom: 0;
+}
+
+.nav-text{
+    padding: 4%;
+}
+
+.table-flex{
+    width: 60px;
+    background-color: #0A0F2D;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.2);
+}
+
+.rest-name{
+    color: #0A0F2D;
+    font-size: 2.5rem;
+}
+
+.tab-hed{
+    color: #8C7851 ;
+}
+
+.tab-no{
+    color: #F5F5F5 ;
+}
+
+body{
+    background-color: #0A0F2D;
+}

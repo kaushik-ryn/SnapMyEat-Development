@@ -1,0 +1,76 @@
+{% extends "customer/starter/base.html" %}
+{% load static %}
+
+{% block title %}Order Confirmation{% endblock title %}
+
+{% block HeadCss %}
+<link rel="stylesheet" href="{% static 'css/starter/order_details.css' %}?v=5">
+{% endblock HeadCss %}
+
+{% block RST-Name %}{{ RST.name }}{% endblock RST-Name %} 
+
+{% block TableNo %}{{ table|stringformat:"02d" }}{% endblock TableNo %} 
+
+{% block ButtonCMD %}
+<a href="{% url 'menu_items' restaurantID=RST.id tableNo=table %}">
+    <button class="catBtn">Back</button>
+</a>
+{% endblock ButtonCMD %}
+
+{% block BodyContent %}
+<div class="container">
+    <h1>Order Details</h1>
+    
+    {% if order_instance %}
+    <div class="order-list">
+        {% for item in order_instance.items %}
+        <div class="order-item">
+            <div>
+                <span class="item-name"><b>{{item.name}}</b></span>
+                {% for size in item.sizes %}                       
+                <div class="order-size">
+                    <div >   
+                        <span><small>{{size.size}}</small></span>   
+                        <span class="item-quantity">x{{size.quantity}}</span>
+                    </div>
+                    <div>
+                        <span class="item-price">₹{{size.price}}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>                                    
+        </div>
+        {% endfor %}
+    </div>
+      <div class="order-status-box">
+    <span class="status-label">Order Status:</span>
+    <span class="status preparing">{{ order_instance.status }}</span>
+  </div>
+    
+    <div class="total">
+        <span class="total-label">Grand Total:</span>
+        <span class="total-price">₹{{order_instance.grand_total}}</span>
+    </div>
+    
+    <p class="message">Your order has been placed successfully!</p>
+    <p class="message">Table No. <span>{{order_instance.table.table_number}}</span></p>
+    <button class="back-btn" style="padding: 20px;">
+        Order No.<br><span>{{order_instance.order_no}}</span>
+    </button>
+    
+    {% else %}
+    <div style="margin: auto; width: 90%; text-align: center;">
+        <img style="width: 95%; margin: auto;" src="{% static 'images/not-found.png' %}" alt="Not found" srcset="">
+        <br>
+        <span style="font-weight: 600;">
+            🛒 Oops! No order found for the given order number. Please check and try again!
+        </span>
+    </div>
+    {% endif %}
+</div>
+
+<!-- SECURITY BLOCK -->
+{% include 'customer/security_block.html' %}
+
+
+{% endblock BodyContent %}

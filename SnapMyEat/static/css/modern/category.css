@@ -1,0 +1,87 @@
+.dark-bg-cat {
+  padding-top: 70px;
+  display: flex;
+  flex-wrap: wrap; 
+  gap: 20px; 
+}
+
+.dark-bg-cat > * {
+  flex: 1 1 calc(50% - 10px); /* Each card takes 50% width minus spacing */
+  max-width: calc(50% - 10px); /* Ensures two cards per row */
+}
+
+.cat-card {
+width: 190px;
+background: white;
+padding: 0.4em;
+border-radius: 6px;
+text-align: center;
+box-shadow: 0px 0px 10px rgb(88, 87, 87, 0.3);
+}
+
+.cat-card-image {
+width: 150px;
+height: 130px;
+border-radius: 6px 6px 0 0;
+}
+
+.food-item-img{
+width: 150px;
+height: 130px;
+object-fit: cover;
+}
+
+.cat-card-image:hover {
+transform: scale(0.98);
+}
+
+.cat-category {
+text-transform: uppercase;
+font-size: 0.7em;
+font-weight: 600;
+color: rgb(63, 121, 230);
+padding: 10px 7px 0;
+}
+
+.cat-category:hover {
+cursor: pointer;
+}
+
+.cat-heading {
+font-weight: 600;
+color: rgb(88, 87, 87);
+padding: 7px;
+}
+
+.cat-heading:hover {
+cursor: pointer;
+}
+
+
+
+.cat-name {
+font-weight: 600;
+}
+
+.cat-name:hover {
+cursor: pointer;
+}
+.cus-margin {
+margin: auto;
+width: 90%;
+margin-bottom: 5%;
+}
+
+/* _________ */
+.background-color-grey{
+  background-color: #F8F8F8;
+}
+
+body{
+  background-color: #F8F8F8;
+}
+.footer-gradient{
+  padding: 10%;
+  background-image: linear-gradient(to bottom, #F8F8F8, #FAF0E6);
+  color: rgba(0, 0, 0, 0.384);
+}

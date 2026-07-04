@@ -1,0 +1,204 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Category</title>
+  <link rel="stylesheet" href="{% static 'css/staff/edit_category.css' %}?v=4">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-brand">{{category.restaurant.name}}</div>
+    <div class="navbar-profile"></div>
+  </nav>
+
+  <div class="content">
+    <!-- <a href="{% url 'management-category' restID %}" class="go-back">&larr; Go Back</a> -->
+    <a href="javascript:window.close()" class="go-back">&larr; Go Back</a>
+    <h1>Edit Category</h1>
+
+    <form action="" method="POST" enctype="multipart/form-data" >
+      {% csrf_token %}
+      <div class="category-cover">
+        <img src="{% static 'images/staff/category_add_edit.jpg' %}" alt="Item Image" id="itemPreview" class="item-image" />
+        
+      </div>
+
+      <div class="category-info">
+        <p><strong>Category ID:</strong> {{ category.id|stringformat:"03d" }}</p>
+
+        <label><strong>Name:</strong></label>
+        <input type="text" name="name" value="{{ category.name }}" maxlength="45" required>
+
+        <label><strong>Description:</strong></label>
+        <textarea name="description" id="descriptionField" rows="3" maxlength="105"
+          oninput="checkCharLimit(this)" placeholder="Max 105 chars or use Regenerate">{{ category.description }}</textarea>
+
+        <div class="d-flex justify-content-between mt-1">
+          <small id="desc-error" class="text-danger"></small>
+          <small id="desc-count" class="text-muted text-end"></small>
+        </div>
+
+        <!-- Regenerate Button -->
+        <div class="text-end mt-2">
+          <button type="button" onclick="generateDescription()" class="btn btn-outline-primary btn-sm upload-label">
+            🔁 Regenerate Description
+          </button>
+        </div>
+
+        <button type="submit" class="btn-pink">Save Changes</button>
+      </div>
+      {% if items|length == 0 %}
+        <button type="button" class="btn-danger" onclick="deleteCategory()">Delete Category</button>
+      {% else %}
+        <p style="color:red;"><strong>Cannot delete:</strong> This category contains {{ items|length }} item(s).</p>
+      {% endif %}
+    </form>
+
+
+    <h3>Items Under This Category</h3>
+    <form method="get" class="search-box">
+      <input type="text" name="itemSearch" placeholder="Search by Item name or ID" value="{{ request.GET.itemSearch }}">
+      <button type="submit" class="search-btn">Search</button>
+    </form>
+
+
+
+    {% if items %}
+      <table class="items-table">
+        <thead>
+          <tr><th>Item ID</th><th>Name</th><th></th></tr>
+        </thead>
+          <tbody id="itemsList">
+            {% for item in items %}
+            <tr>
+              <td>{{ item.id|stringformat:"03d" }}</td>
+              <td>{{ item.name }}</td>
+              <td><a href="{% url 'management-menu-edit' restID item.id %}" target="_blank" class="edit-btn">Edit</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <div style="margin: auto; width: 90%; text-align: center;">
+          <img style="width: 20%; margin: auto;" src="{% static 'images/not-found.png' %}" alt="Not found" srcset="">
+          <br>
+          <span style="font-weight: 600;"> Oops! We couldn't find any matching dishes. Explore other delicious
+            options!</span>
+        </div>
+      {% endif %}
+      <br><br>
+  </div>
+  <script>
+
+    
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.querySelector("form");
+      const descField = document.getElementById("descriptionField");
+      const nameInput = document.querySelector('input[name="name"]');
+
+      form.addEventListener("submit", function (e) {
+        const isValid = checkCharLimit(descField);
+        const nameValue = nameInput.value.trim();
+        if(nameValue.length>45){
+          alert("Category name cannot exceed 80 characters.");
+          e.preventDefault();
+        }
+        if (!isValid) {
+          e.preventDefault();
+          alert("Please fix the description before submitting.");
+        }
+      });
+
+
+    });
+
+
+    function checkCharLimit(textarea) {
+      const maxChars = 105;
+
+      const errorMsg = document.getElementById('desc-error');
+      const countMsg = document.getElementById('desc-count');
+
+      let text = textarea.value;
+      let charCount = text.length;
+
+      const words = text.trim().split(/\s+/).filter(Boolean);  // ✅ define words properly
+      countMsg.textContent = `${words.length} words • ${charCount} characters`;
+
+      if (charCount > maxChars) {
+        textarea.value = text.slice(0, maxChars);
+        const trimmedText = textarea.value;
+        const trimmedWords = trimmedText.trim().split(/\s+/).filter(Boolean);
+        countMsg.textContent = `${trimmedWords.length} words • ${trimmedText.length} characters`;
+        errorMsg.textContent = `⚠️ Max ${maxChars} characters allowed. Trimmed.`;
+        return false;
+      }
+
+      errorMsg.textContent = '';
+      return true;
+    }
+
+
+    function generateDescription() {
+      const nameInput = document.querySelector('input[name="name"]');
+      const descField = document.getElementById("descriptionField");
+      const name = nameInput.value.trim();
+      if (!name) {
+        alert("Please enter a category name first.");
+        return;
+      }
+
+      fetch("{% url 'description-generate' restID %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}",
+        },
+        body: JSON.stringify({ name })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.description) {
+          descField.value = data.description;
+          checkCharLimit(descField);
+        } else {
+          alert("Could not generate description.");
+        }
+      })
+      .catch(() => alert("Something went wrong. Please try again."));
+    }
+
+
+    function deleteCategory() {
+      if (!confirm("Are you sure you want to delete this category?")) return;
+
+      fetch("{% url 'management-category-del' restID category.id %}", {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": "{{ csrf_token }}",
+          "Content-Type": "application/json",
+        },
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === "success") {
+          // window.location.href = "{% url 'management-category' restID %}";
+          window.close();
+        } else {
+          alert(data.message || "Deletion failed.");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Something went wrong while deleting.");
+      });
+    }
+  
+
+  </script>
+
+
+</body>
+</html>

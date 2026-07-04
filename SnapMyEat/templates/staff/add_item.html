@@ -1,0 +1,657 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Item</title>
+  <link rel="stylesheet" href="{% static 'css/staff/edit_item.css' %}?v=2" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar-brand">{{restaurant.name}}</div>
+    <div class="navbar-profile"></div>
+  </nav>
+
+  <div class="content">
+    <a href="{% url 'management-menu' restID %}" class="go-back">&larr; Go Back</a>
+    <h1>Add New Item</h1>
+
+    <form action="" method="POST">
+      {% csrf_token %}
+      <div class="edit-item-container">
+        <div class="left-panel">
+          <img src="{% static 'images/staff/placeholder/default/1.jpg' %}" alt="Item Image" class="item-image" id="itemPreview"/>
+          <input type="hidden" name="image_url" id="image_url_field" value="/static/images/staff/placeholder/default/1.jpg">
+          <div class="image-buttons">
+            <button type="button" id="generateImageBtn" class="upload-label">🔁 Generate Image</button>
+            <button type="button" id="resetImageBtn" class="upload-label" >Use Default</button>
+            <div style="margin-top: 10px; color:#d76897">"Use names like 'Dessert', 'Starter', or any dish type to generate relevant images."</div>
+          </div>
+
+        </div>
+
+        <div class="right-panel">
+          <label><strong>Name:</strong></label>
+          <input type="text" name="name" required maxlength="50" />
+
+
+          <label><strong>Category:</strong></label>
+          <select name="category" class="custom-select">
+            {% for category in categories %}
+              <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+          </select>
+
+          <div class="custom-select-wrapper">
+          <label><strong>Type:</strong></label>
+          <select name="type" id="typeSelect" class="custom-select">
+            <option value="Veg"> Veg</option>
+            <option value="Non Veg"> Non-Veg</option>
+            <option value="Drink"> Drink</option>
+          </select>
+        </div>
+
+        <br><br>
+
+          <label for="is_available"><strong>Available:</strong></label>
+          <label class="switch">
+            <input type="checkbox" name="is_available" id="is_available" checked>
+            <span class="slider round"></span>
+          </label><br><br>
+
+
+          <!-- Header row (labels for the inputs) -->
+          <div class="label-row">
+            <div class="label-cell">Size</div>
+            <div class="label-cell">Price</div>
+            <div class="label-cell">Default</div>
+          </div>
+
+          <!-- Container for dynamic rows -->
+          <div class="sizes-container">
+          <div class="size-row">
+            <div>
+              <label class="mobile-label">Size</label>
+              <input type="text" name="size_1" class="size-input" placeholder="Enter size" required maxlength="10" />
+            </div>
+            <div>
+              <label class="mobile-label">Price</label>
+              <input type="number" name="price_1" class="price-input" placeholder="Price" min="10" max="100000" step="0.01" required />
+            </div>
+            <label class="default-check">
+              <input type="checkbox" name="default_size" value="1" class="default-size-checkbox" />
+              <span class="mobile-label">Default</span>
+            </label>
+            <button type="button" class="remove-size" style="display: none;">−</button>
+          </div>
+
+          </div>
+
+          <button type="button" id="add-size" class="btn-pink">+ Add Size</button><br><br>
+
+          <label><strong>Tags:</strong></label>
+          <div class="tags-list">
+            {% for tag in tags %}
+              <label>
+                <input type="checkbox" name="tags" value="{{ tag.id }}">
+                {{ tag.name }}
+              </label>
+            {% endfor %}
+          </div>
+
+          <button type="submit" class="btn-pink">Add Item</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+
+<style>
+   html, body {
+    overflow: auto;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none; 
+    overflow-x: hidden; /* prevent horizontal scroll */
+  margin: 0;
+  padding: 0;    /* Firefox */
+  }
+
+  html::-webkit-scrollbar, 
+  body::-webkit-scrollbar {
+    display: none;             /* Chrome, Safari, Opera */
+  }
+  .edit-item-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+
+/* Make flex column on medium and smaller screens */
+@media (max-width: 992px) {
+  .edit-item-container {
+    flex-direction: column;
+  }
+
+}
+/* General input styling */
+.right-panel input[type="text"],
+.right-panel input[type="number"],
+.right-panel select {
+  width: 94%;
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+}
+.size-row {
+  display: flex;
+  flex-wrap: nowrap; /* Force all in one row */
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto; /* Allow horizontal scroll if screen is too narrow */
+  margin-bottom: 12px;
+}
+
+/* Inputs should not grow too wide */
+.size-input,
+.price-input {
+  width: 100px;
+  min-width: 90px;
+  max-width: 120px;
+  padding: 10px 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 2px solid #ccc;
+}
+
+/* Label checkbox */
+.default-check {
+  font-size: 14px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Remove button */
+/* .remove-size {
+  background: #ff4d4f;
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+} */
+.label-row {
+  display: flex;
+  gap: 12px;
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.label-cell {
+  width: 100px;
+  min-width: 90px;
+  max-width: 120px;
+  text-align: left;
+  padding-left:10px;
+}
+
+/* Match widths of input columns */
+.label-cell:nth-child(3) {
+  min-width: 80px;
+}
+.label-cell:nth-child(4) {
+  min-width: 60px;
+}
+
+@media (max-width: 370px) {
+  .edit-item-container {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 0 10px;
+  }
+
+  .left-panel,
+  .right-panel {
+    width: 100%;
+  }
+
+  /* Stack Size Label + Input */
+  .label-row {
+    display: none; /* hide horizontal labels */
+  }
+
+  .size-row {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  .size-row label,
+  .size-row button {
+    width: 100%;
+  }
+
+  .size-input::before,
+  .price-input::before {
+    content: none; /* prevent default */
+  }
+
+  .size-input,
+  .price-input {
+    max-width: 100%;
+  }
+
+  .size-row input.size-input::placeholder {
+    content: none;
+  }
+
+  .size-row input.size-input::before {
+    content: "Size";
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .size-row input.price-input::before {
+    content: "Price";
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  /* Instead of pseudo-elements, better to wrap input with labels: */
+  .size-label,
+  .price-label {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+
+  .default-check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    justify-content: flex-start;
+    margin-top: 4px;
+  }
+
+  /* Resize Choose Image Button */
+  .upload-label {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  #file-name {
+    font-size: 11px;
+  }
+
+  h1 {
+    font-size: 20px;
+    margin-top: 1rem;
+  }
+
+  .navbar-brand {
+    font-size: 16px;
+  }
+
+  .content {
+    padding: 12px 10px;
+  }
+}
+/* By default, hide per-input labels */
+.mobile-label {
+  display: none;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+/* For small screens ≤370px, show inline labels and hide the top label row */
+@media (max-width: 370px) {
+  .label-row {
+    display: none;
+  }
+
+  .mobile-label {
+    display: block;
+  }
+
+  .size-row {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  .size-row > div {
+    width: 100%;
+  }
+
+  .default-check {
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .size-input,
+  .price-input {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .remove-size {
+    align-self: flex-end;
+    margin-top: 6px;
+  }
+}
+
+
+  .custom-select-wrapper {
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.custom-select {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 15px;
+  color: #333;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23666' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px 16px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Border when selected */
+.custom-select.green-border {
+  border-color: #28a745; /* Green */
+}
+
+.custom-select.red-border {
+  border-color: #dc3545; /* Red */
+}
+
+.custom-select.blue-border {
+  border-color: #2196f3; /* Blue */
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .custom-select {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+}
+
+
+  .custom-file-upload {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.upload-label {
+  display: inline-block;
+  background-color:#b64c62;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s ease;
+  font-size: 14px;
+  border:2px solid #b64c62;
+}
+
+.upload-label:hover {
+   background-color:white;
+  color:#b64c62;
+}
+
+.custom-file-upload input[type="file"] {
+  display: none;
+}
+
+#file-name {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #555;
+  word-break: break-all;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .upload-label {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  #file-name {
+    font-size: 12px;
+  }
+}
+.size-row {
+  margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.size-options {
+  display: flex;
+  gap: 10px;
+}
+
+.default-check {
+  font-size: 14px;
+  font-weight: 500;
+}
+@media (max-width: 370px) {
+  .mobile-label {
+    display: block;
+  }
+}
+
+
+</style>
+
+
+<!-- VEG/NON-VEG DESIGN -->
+<script>
+  const typeSelect = document.getElementById("typeSelect");
+
+  function updateBorder() {
+    typeSelect.classList.remove("green-border", "red-border");
+
+    if (typeSelect.value === "Veg") {
+      typeSelect.classList.add("green-border");
+    } else if (typeSelect.value === "Non Veg") {
+      typeSelect.classList.add("red-border");
+    }else if (typeSelect.value === "Drink") {
+      typeSelect.classList.add("blue-border");
+    }
+  }
+
+  updateBorder();
+
+  
+  typeSelect.addEventListener("change", updateBorder);
+</script>
+
+<!-- SIZE ADDING -->
+<script>
+  const container = document.querySelector('.sizes-container');
+  const addSizeBtn = document.getElementById('add-size');
+
+  // Ensure one "default" checkbox is selected before form submission
+  document.querySelector("form").addEventListener("submit", function (e) {
+    const defaultChecked = document.querySelectorAll('.default-size-checkbox:checked');
+    if (defaultChecked.length === 0) {
+      alert("Please select one size as default.");
+      e.preventDefault();
+    }
+  });
+
+  function updateRemoveButtons() {
+    const rows = container.querySelectorAll('.size-row');
+    rows.forEach((row, i) => {
+      const removeBtn = row.querySelector('.remove-size');
+      if (rows.length <= 1) {
+        removeBtn.style.display = 'none';
+      } else {
+        removeBtn.style.display = 'inline-block';
+      }
+    });
+  }
+
+  function allValidRows() {
+  const rows = container.querySelectorAll('.size-row');
+  for (const row of rows) {
+    const sizeInput = row.querySelector('input[type="text"]');
+    const priceInput = row.querySelector('input[type="number"]');
+    const sizeValue = sizeInput.value.trim().toLowerCase();
+
+    if (!sizeValue) {
+      alert("Please enter a size.");
+      return false;
+    }
+
+    if (!priceInput.value.trim() || Number(priceInput.value) < 10) {
+      alert("Please enter a valid price (minimum ₹10).");
+      return false;
+    }
+  }
+  return true;
+}
+
+
+  function handleDefaultCheckbox(e) {
+    if (e.target.classList.contains("default-size-checkbox")) {
+      const checkboxes = container.querySelectorAll('.default-size-checkbox');
+      checkboxes.forEach(box => {
+        if (box !== e.target) box.checked = false;
+      });
+    }
+  }
+
+  addSizeBtn.addEventListener('click', () => {
+    const count = container.querySelectorAll('.size-row').length;
+    if (count >= 3) {
+      alert("Maximum 3 sizes allowed.");
+      return;
+    }
+
+    if (!allValidRows()) return;
+
+    const index = count + 1;
+    const row = document.createElement('div');
+    row.className = 'size-row';
+ row.innerHTML = `
+  <div>
+    <label class="mobile-label">Size</label>
+    <input type="text" name="size_${index}" class="size-input" placeholder="Enter size" required />
+  </div>
+  <div>
+    <label class="mobile-label">Price</label>
+    <input type="number" name="price_${index}" class="price-input" placeholder="Price" min="10" max="100000" step="0.01" required />
+  </div>
+  <label class="default-check">
+    <input type="checkbox" name="default_size" value="${index}" class="default-size-checkbox">
+    <span class="mobile-label">Default</span>
+  </label>
+  <button type="button" class="remove-size">−</button>
+`;
+
+
+
+    container.appendChild(row);
+    updateRemoveButtons();
+  });
+
+  document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('remove-size')) {
+      e.target.closest('.size-row').remove();
+      updateRemoveButtons();
+    }
+    handleDefaultCheckbox(e);
+  });
+
+  updateRemoveButtons();
+</script>
+
+<!-- IMAGE API -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const nameInput = document.querySelector('input[name="name"]');
+    const previewImg = document.getElementById("itemPreview");
+    const generateBtn = document.getElementById("generateImageBtn");
+    const resetBtn = document.getElementById("resetImageBtn");
+
+    function fetchImage(query) {
+      fetch("{% url 'ajax-fetch-image' restID %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}",
+        },
+        body: JSON.stringify({ name: query }),
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.image) {
+          previewImg.src = data.image;
+          document.getElementById("image_url_field").value = data.image;
+        }
+      })
+      .catch(err => console.log("Fetch failed:", err));
+    }
+
+    generateBtn.addEventListener("click", () => {
+      const name = nameInput.value.trim();
+      
+      if (name) {
+        fetchImage(name);
+      } else {
+        alert("Please enter item name first.");
+      }
+    });
+
+    resetBtn.addEventListener("click", () => {
+      const name = "default";
+      fetchImage(name);
+
+    });
+
+  });
+
+</script>
+
+
+</body>
+</html>

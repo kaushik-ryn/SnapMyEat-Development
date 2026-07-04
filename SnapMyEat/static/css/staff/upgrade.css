@@ -1,0 +1,236 @@
+body {
+  font-family: "Raleway", sans-serif;
+  background: linear-gradient(to right, #ece9e6, #ffffff);
+  padding: 2rem 0;
+}
+
+.container {
+  max-width: 1200px;
+  position: relative;
+}
+
+.panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.left-panel {
+  flex: 1 1 300px;
+  border-right: 2px solid #eee;
+  padding-right: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.template-option {
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: transform 0.3s, border 0.3s;
+  padding: 0.75rem;
+}
+
+.template-option:hover {
+  transform: translateY(-4px);
+}
+
+.template-option.active {
+  border: 2px solid #c08261 !important;
+}
+
+.template-option h5 {
+  text-align: center;
+  margin-top: 0.5rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.right-panel {
+  flex: 2 1 600px;
+  position: relative;
+}
+
+.carousel img {
+  border-radius: 16px;
+  width: 100%;
+  height: auto;
+  animation: imageTransition 1s ease-in-out;
+}
+
+@keyframes imageTransition {
+  from {
+    transform: scale(1.05) translateX(30px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateX(0);
+    opacity: 1;
+  }
+}
+
+.plan-details {
+  margin-top: 2rem;
+  background-color: #f5f5f5;
+  padding: 1.5rem;
+  border-radius: 12px;
+}
+
+.plan-details h4 {
+  font-weight: bold;
+  color: #444;
+}
+
+.price {
+  font-size: 2rem;
+  color: #c08261;
+  margin: 1rem 0;
+}
+
+.features li {
+  list-style: none;
+  margin-bottom: 0.5rem;
+}
+
+.features li::before {
+  content: "✔";
+  color: green;
+  margin-right: 0.5rem;
+}
+
+.btn-upgrade {
+  background-color: #c08261;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  margin-top: 1rem;
+  transition: 0.3s;
+}
+
+.btn-upgrade:hover {
+  background-color: #a06247;
+}
+
+#introText {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #c08261;
+  padding: 3rem 1rem;
+  font-style: italic;
+  letter-spacing: 1px;
+  position: relative;
+  top: 200px;
+}
+
+.plan-switch {
+  text-align: center;
+  font-weight: 600;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #444;
+}
+
+.bottom-image-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.bottom-image-wrapper img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+}
+
+.bottom-image-wrapper span {
+  font-weight: 600;
+  color: #c08261;
+}
+
+.close-btn {
+  position: absolute;
+  right: -20px;
+  top: -20px;
+  background: #c08261;
+  color: white;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 99;
+}
+
+@media (max-width: 767.98px) {
+  .bottom-image-wrapper {
+    display: none !important;
+  }
+}
+@media (max-width: 767.98px) {
+  .bottom-image-wrapper {
+    display: none !important;
+  }
+
+  .carousel img {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: cover;
+  }
+
+  .right-panel {
+    padding-top: 1rem;
+  }
+}
+/* Hide waiter image below md screen */
+@media (max-width: 991.98px) {
+  .bottom-image-wrapper {
+    display: none !important;
+  }
+}
+
+/* Panel position must be relative to align close-btn properly */
+.panel {
+  position: relative;
+}
+
+/* Cross button pinned to the top right of the panel (both panels) */
+.close-btn {
+  position: absolute;
+  right: -28px;
+  top: -15px;
+  background: #c08261;
+  color: white;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 99;
+}
+
+/* On small screens, make the carousel image larger */
+@media (max-width: 767.98px) {
+  .carousel img {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: cover;
+  }
+
+  .right-panel {
+    padding-top: 1rem;
+  }
+}

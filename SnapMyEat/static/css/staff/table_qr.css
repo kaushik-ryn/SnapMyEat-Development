@@ -1,0 +1,154 @@
+.settings-container {
+  padding: 2rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.go-back {
+  display: inline-flex;
+  align-items: center;
+  color: #6c757d;
+  text-decoration: none;
+  margin-bottom: 1rem;
+}
+
+.go-back:hover {
+  color: #0d6efd;
+}
+.profile-section {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.theme-card {
+  position: relative;
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  height: 100%;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.theme-card:hover {
+  border-color: #adb5bd;
+}
+
+.theme-card.selected {
+  border-color: #0d6efd;
+  background-color: #f8f9fa;
+}
+
+.theme-name {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.theme-select {
+  display: flex;
+  justify-content: flex-end;
+  color: #0d6efd;
+}
+
+.locked-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+}
+
+.table-management {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.add-table-btn {
+  display: inline-flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: #0d6efd;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.add-table-btn svg {
+  margin-right: 0.5rem;
+}
+
+.add-table-form {
+  margin-bottom: 1.5rem;
+}
+
+.table-list {
+  border-top: 1px solid #dee2e6;
+  padding-top: 1rem;
+}
+
+.table-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.table-number {
+  font-weight: 500;
+}
+
+.upgrade-section {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.wave-design {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(45deg, #0d6efd, #6f42c1);
+  border-radius: 0 0 0 100%;
+}
+
+.upgrade-section h3 {
+  color: #0d6efd;
+  margin-bottom: 1.5rem;
+}
+
+.feature-section {
+  height: 100px;
+  background-color: #f8f9fa;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+}
+
+.upgrade-now-btn {
+  background: linear-gradient(45deg, #0d6efd, #6f42c1);
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  margin-top: 1rem;
+}

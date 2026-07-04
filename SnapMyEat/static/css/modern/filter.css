@@ -1,0 +1,125 @@
+/* Premium Light Theme with Rich Design */
+.filter-container {
+  position: relative;
+  display: inline-block;
+  margin: 10px;
+}
+
+.filter-btn {
+  background: linear-gradient(135deg, #0A0F2D, #1A1F3D); /* Gradient for depth */
+  color: #ffffff;
+  border: none;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Deeper shadow for depth */
+}
+
+.filter-btn:hover {
+  background: linear-gradient(135deg, #080c24, #14182F); /* Darker gradient on hover */
+  transform: translateY(-2px); /* Subtle lift effect */
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+}
+
+.filter-dropdown {
+  display: none;
+  position: absolute;
+  top: 60px; /* Adjusted for better spacing */
+  left: 0;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.2); /* Premium shadow */
+  width: 240px; /* Slightly wider for better spacing */
+  z-index: 1200;
+}
+
+.filter-dropdown label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #444; /* Darker text for better readability */
+  display: block;
+  margin: 10px 0 6px;
+}
+
+.filter-dropdown select, 
+.filter-dropdown input[type="range"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out;
+  background: #f9f9f9; /* Light background for inputs */
+  font-size: 14px;
+}
+
+.filter-dropdown select:focus, 
+.filter-dropdown input[type="range"]:focus {
+  outline: none;
+  border-color: #0A0F2D;
+  box-shadow: 0px 0px 8px rgba(10, 15, 45, 0.2); /* Focus effect */
+}
+
+#price-value {
+  font-weight: bold;
+  display: block;
+  text-align: center;
+  margin-top: 8px;
+  color: #0A0F2D; /* Match primary color */
+}
+
+.filter-aaply-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #0A0F2D, #1A1F3D); /* Gradient for consistency */
+  color: #ffffff;
+  padding: 12px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  margin-top: 15px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+}
+
+.filter-aaply-btn:hover {
+  background: linear-gradient(135deg, #080c24, #14182F); /* Darker gradient on hover */
+  transform: translateY(-2px); /* Subtle lift effect */
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+}
+
+.order-history button {
+  background-color: #ffffff;
+  color: #1A1F3D;
+  padding: 14px 14px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); 
+}
+
+.order-history button:hover {
+  background: linear-gradient(135deg, #080c24, #14182F); /* Darker gradient on hover */
+  transform: translateY(-2px); /* Subtle lift effect */
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+}
+
+.upper-section {
+  display: flex;
+  justify-content: space-between;
+  width: 95%;
+  margin: auto;
+  margin-top: 3%;
+}

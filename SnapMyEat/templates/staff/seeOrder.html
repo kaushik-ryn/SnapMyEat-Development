@@ -1,0 +1,468 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{restInstance.name}} - Orders</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Feather Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="{% static 'css/staff/order.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/staff/index.css' %}?v=2" />
+  <link rel="stylesheet" href="{% static 'css/staff/footer.css' %}" />
+</head>
+
+<body>
+  <style>
+    html,
+    body {
+      overflow: auto;
+      -ms-overflow-style: none;
+      /* Internet Explorer 10+ */
+      scrollbar-width: none;
+      /* Firefox */
+    }
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      display: none;
+      /* Chrome, Safari, Opera */
+    }
+
+    .close-button {
+  position: absolute;
+  top: 100px;
+  right: 100px;
+  z-index: 10;
+ 
+}
+
+.close-button:hover {
+  background-color:rgba(234, 160, 160, 0.66);
+}
+
+@media (max-width: 1106px) {
+  .close-button {
+    top: 80px;
+    right: 8px;
+    padding: 5px 7px;
+  }
+}
+
+  </style>
+
+
+
+
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'management-home' restID %}">{{restInstance.name}}</a>
+      <div class="d-flex align-items-center" style="padding-right: 10px;">
+        <a href="{% url 'management-profile' restID %}" style="padding-right: 10px;"
+          class="profile-icon d-flex align-items-center justify-content-center text-white me-2">
+          <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center"
+            style="width: 35px; height: 35px">
+            <i data-feather="user"></i>
+          </div>
+        </a>
+        <a href="{% url 'management-login' restID %}">
+          <div class="logout">
+            <img width="20" height="20" src="https://img.icons8.com/ios/50/exit--v1.png" alt="exit--v1" />
+            <span class="logout-text">Logout</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+
+  <div class="d-flex justify-content-center" style="min-height: 100vh; padding: 20px;">
+    <div style="width: 100%; max-width: 1200px;">
+      <div class="order-header d-flex flex-column align-items-center">
+        <h1 class="orders-title text-center">All Orders</h1>
+        <a href="{% url 'management-orders' restID %}" >
+          <button class="btn btn-outline-danger mt-2 mb-3 close-button" title="Close Table">
+            <i data-feather="x"></i>
+          </button>
+        </a>
+      </div>
+
+      <!-- Search Box -->
+      <div class="d-flex justify-content-center">
+        <div style="max-width: 800px; width: 100%;">
+          <form method="get" action="{% url 'management-seeOrders' restID %}">
+            <input type="hidden" name="status" value="{{ status_filter }}">
+            <div class="row g-2">
+              <!-- Search Input -->
+              <div class="col-12 col-md-6">
+                <div class="input-group">
+                  <span class="input-group-text bg-white border-end-0">
+                    <i data-feather="search"></i>
+                  </span>
+                  <input style="padding: 10px;border-radius: 0.5cap;" type="text" name="search" class="form-control border-start-0"
+                    placeholder="Search by order number or table number" value="{{ query }}">
+                </div>
+              </div>
+
+              <!-- Date Input -->
+              <div class="col-6 col-md-4">
+                <div class="input-group">
+                  <span class="input-group-text bg-white border-end-0">
+                    <i data-feather="calendar"></i>
+                  </span>
+                  <input style="padding:10px;" type="date" name="date" id="dateFilter" value="{{ selected_date }}"
+                    class="form-control border-start-0" max="">
+                </div>
+              </div>
+
+              <!-- Search Button -->
+              <div class="col-6 col-md-2">
+                <button class="btn btn-outline-secondary w-100" style="padding:10px;" type="submit">Search</button>
+              </div>
+            </div>
+            
+
+          </form>
+        </div>
+      </div>
+
+      <!-- Filter Options -->
+      <div class="filter-options mb-4 d-flex justify-content-center flex-wrap text-center" style="margin-top:10px;">
+        <a href="?search={{ query|default_if_none:'' }}&date={{ selected_date|default_if_none:'' }}"
+          class="filter-badge {% if not status_filter %}active{% endif %}">All</a>
+        <a href="?status=preparing&search={{ query|default_if_none:'' }}&date={{ selected_date|default_if_none:'' }}"
+          class="filter-badge {% if status_filter == 'preparing' %}active{% endif %}">Preparing</a>
+        <a href="?status=ready&search={{ query|default_if_none:'' }}&date={{ selected_date|default_if_none:'' }}"
+          class="filter-badge {% if status_filter == 'ready' %}active{% endif %}">Ready</a>
+        <a href="?status=completed&search={{ query|default_if_none:'' }}&date={{ selected_date|default_if_none:'' }}"
+          class="filter-badge {% if status_filter == 'completed' %}active{% endif %}">Completed</a>
+        <a href="?status=cancelled&search={{ query|default_if_none:'' }}&date={{ selected_date|default_if_none:'' }}"
+          class="filter-badge {% if status_filter == 'cancelled' %}active{% endif %}">Cancelled</a>
+      </div>
+
+
+      <!-- Orders Table -->
+      {% if orders %}
+      <!-- Close Icon Outside Table -->
+
+
+      <div class="table-responsive" style="overflow-x: auto; white-space: nowrap;">
+
+        <table class="table table-hover order-table">
+          <thead class="table-light">
+            <tr>
+              <th>Order</th>
+              <th>Time</th>
+              <th>Item</th>
+              <th>Table No.</th>
+              <th>Billing</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in orders %}
+
+            <tr class="order-row {{ order.status }}" data-order-id="{{ order.id }}">
+
+
+              <td>{{order.order_no}}</td>
+              <td>{{ order.created_at|date:"d F Y, h:i A" }}</td>
+
+              <td>
+                <ul style="margin: 0; padding-left: 1rem">
+                  {% for item in order.items %}
+                  {% for size in item.sizes%}
+                  <li
+                  data-name="{{ item.name }} ({{ size.size }})"
+                  data-qty="{{ size.quantity }}"
+                  data-price="{{ size.price }}"
+                  >
+                    {{ item.name }} ({{ size.size }}) x {{ size.quantity }}
+                  </li>
+                  {% endfor %}
+                  {% endfor %}
+                </ul>
+              </td>
+              <td>{{order.table.table_number}}</td>
+              <td>
+                ₹{{order.grand_total}}
+                <i data-feather="file-text" class="ms-2 text-success print-icon" style="cursor: pointer;"
+                  onclick="printBill(this)" title="Print Bill"></i>
+              </td>
+
+
+
+              <td><span class="badge bg-secondary text-capitalize">{{ order.status }}</span></td>
+
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div style="margin: auto; width: 90%; text-align: center;">
+        <img style="width: 20%; margin: auto;" src="{% static 'images/not-found.png' %}" alt="Not found" srcset="">
+        <br>
+        <span style="font-weight: 600;">
+          Oops! No order found for the given query. Please check and try again!
+        </span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  <footer class="footer">a <strong>CRE8MARK</strong> production</footer>
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- NEW ORDER RECEIVED NOTIFICATION -->
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 1055">
+    <div id="newOrderToast" class="toast bg-success text-white" role="alert" data-bs-delay="5000">
+      <div class="toast-body">
+        🛎️ <strong>New Order Received!</strong> Check the Preparing tab.
+      </div>
+    </div>
+  </div>
+
+  <!-- WAITER CALLING NOTIFICATION -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
+    <div id="waiterToast" class="toast bg-success text-white" role="alert" data-bs-delay="5000">
+      <div class="toast-body">
+        🛎 Waiter called at <strong>Table <span id="waiterTable"></span></strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRINT BILL -->
+  <div id="printArea" style="display: none;">
+    <div style="padding: 30px; font-family: Arial; max-width: 600px; margin: auto;">
+      <h2 style="text-align: center;">MyRestaurant</h2>
+      <p style="text-align: center; margin-bottom: 30px;">Greater Noida, India</p>
+
+      <div style="margin-bottom: 10px;">
+        <strong>Table:</strong> <span id="printTableNo"></span><br />
+        <strong>Order ID:</strong> <span id="printOrderId"></span><br />
+        <strong>Date:</strong> <span id="printDateTime"></span>
+      </div>
+
+      <table style="width: 100%; border-collapse: collapse;" border="1">
+        <thead>
+          <tr>
+            <th style="padding: 8px;">Item</th>
+            <th style="padding: 8px;">Qty</th>
+            <th style="padding: 8px;">Price</th>
+          </tr>
+        </thead>
+        <tbody id="printItems"></tbody>
+      </table>
+
+      <div style="margin-top: 20px; text-align: right;">
+        <p><strong>Subtotal:</strong> ₹<span id="printSubtotal"></span></p>
+        <p><strong>Tax (5%):</strong> ₹<span id="printTax"></span></p>
+        <p><strong>Total:</strong> ₹<span id="printTotal"></span></p>
+      </div>
+    </div>
+  </div>
+  <!-- BILL SCRIPT -->
+  <script>
+    function printBill(icon) {
+      const row = icon.closest('tr');
+      const orderId = row.querySelector('td:nth-child(1)').textContent.trim();
+      const dateTime = row.querySelector('td:nth-child(2)').textContent.trim();
+      const items = row.querySelectorAll('td:nth-child(3) li');
+      const tableNo = row.querySelector('td:nth-child(4)').textContent.trim();
+      const amount = parseFloat(row.querySelector('td:nth-child(5)').textContent.replace('₹', '').trim());
+
+      // Fill bill content
+      document.getElementById('printOrderId').textContent = orderId;
+      document.getElementById('printDateTime').textContent = dateTime;
+      document.getElementById('printTableNo').textContent = tableNo;
+
+      const tbody = document.getElementById('printItems');
+      tbody.innerHTML = '';
+
+      items.forEach(item => {
+        const name = item.dataset.name;
+        const qty = parseInt(item.dataset.qty);
+        const price = parseFloat(item.dataset.price);
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+        <td style="padding: 6px;">${name}</td>
+        <td style="padding: 6px;">${qty}</td>
+        <td style="padding: 6px;">₹${(price * qty).toFixed(2)}</td>
+      `;
+        tbody.appendChild(tr);
+      });
+
+      const tax = (amount * 0.05).toFixed(2);
+      const total = (amount + parseFloat(tax)).toFixed(2);
+
+      document.getElementById('printSubtotal').textContent = amount.toFixed(2);
+      document.getElementById('printTax').textContent = tax;
+      document.getElementById('printTotal').textContent = total;
+
+      // Generate bill content
+      const billHTML = document.getElementById('printArea').innerHTML;
+      const printWindow = window.open('', '_blank', 'width=800,height=600');
+
+      // Add load-safe printing
+      printWindow.document.write(`
+      <html>
+        <head>
+          <title>Order Bill</title>
+          <style>
+            body { font-family: Arial; margin: 20px; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #000; padding: 6px; text-align: left; }
+            th { background-color: #f2f2f2; }
+          </style>
+        </head>
+        <body onload="window.print();">
+          ${billHTML}
+        </body>
+      </html>
+    `);
+      printWindow.document.close();
+    }
+  </script>
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const tbody = document.querySelector(".order-table tbody");
+
+      // Helper to store new orders persistently
+      function trackNewOrder(orderId) {
+        let stored = JSON.parse(localStorage.getItem("new_orders") || "[]");
+        if (!stored.includes(orderId)) {
+          stored.push(orderId);
+          localStorage.setItem("new_orders", JSON.stringify(stored));
+        }
+      }
+
+
+      // WebSocket setup
+      window.addEventListener("load", () => {
+        const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+        const liveMessageSocket = new WebSocket(`${wsScheme}://${window.location.host}/ws/live/message/socket/{{ restID }}/`)
+
+        liveMessageSocket.onopen = () => console.log("liveMessage WebSocket connected");
+        liveMessageSocket.onclose = () => console.warn("liveMessage WebSocket closed");
+        liveMessageSocket.onerror = (e) => console.error("liveMessage WebSocket error", e);
+        
+
+        // Socket Connection for Order & Waiter Call both
+        liveMessageSocket.onmessage = (event) =>{
+          try{
+            const data = JSON.parse(event.data);
+            if (data.type === "order_notification") {
+              const order = data.order;
+              if (!order || !tbody) return;
+
+              // Show toast
+              const toastEl = document.getElementById('newOrderToast');
+              if (toastEl) new bootstrap.Toast(toastEl).show();
+
+              trackNewOrder(order.id);
+            }
+            
+            else if (data.type === "waiter_notification") {
+              const tableNo = data.table;
+              
+              const waiterToast = document.getElementById("waiterToast");
+              const waiterTableSpan = document.getElementById("waiterTable");
+
+              if (waiterToast && waiterTableSpan) {
+                waiterTableSpan.textContent = tableNo;
+                new bootstrap.Toast(waiterToast).show();
+              }
+            }
+          }catch (err) {
+            alert("[WS] Message parse error:", err)
+            console.error("[WS] Message parse error:", err);
+          }
+        }
+      });
+
+      // DATE TIME SCRIPT
+      // Set max date to yesterday
+      const dateInput = document.getElementById("dateFilter");
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      const maxDate = yesterday.toISOString().split("T")[0];
+
+      dateInput.setAttribute("max", maxDate);
+
+      // If input is blank (like on first load), set it
+      if (!dateInput.value) {
+        dateInput.value = maxDate;
+      }
+      feather.replace();
+    });
+  </script>
+
+
+
+
+  <style>
+    .highlight-new {
+      background-color: #f3e8ff !important;
+      animation: glowSlide 0.5s ease-out, subtlePulse 1.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowSlide {
+      0% {
+        transform: translateX(-30%);
+        opacity: 0.2;
+      }
+
+      100% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes subtlePulse {
+      from {
+        box-shadow: 0 0 3px 1px rgba(153, 102, 255, 0.2);
+      }
+
+      to {
+        box-shadow: 0 0 8px 3px rgba(153, 102, 255, 0.35);
+      }
+    }
+
+    .order-row.ready {
+      background-color: #e0ffe0;
+      /* light green */
+    }
+
+    .order-row.completed {
+      background-color: #d0f0ff;
+      /* light blue */
+    }
+
+    .order-row.cancelled {
+      background-color: #ffe0e0;
+      /* light red */
+    }
+  </style>
+  
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+  <script>
+    feather.replace();
+  </script>
+
+
+</body>
+
+</html>

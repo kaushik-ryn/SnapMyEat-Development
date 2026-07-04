@@ -1,0 +1,447 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ restInstance.name }} - Table/QR</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Feather Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css" rel="stylesheet" />
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="{% static 'css/staff/index.css' %}?v=2" />
+  <link rel="stylesheet" href="{% static 'css/staff/table_qr.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/staff/footer.css' %}" />
+
+
+
+  <style>
+    html,
+    body {
+      overflow-x: hidden;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar .nav-link.active {
+        background-color: transparent !important;
+      }
+
+      .sidebar .nav-link.active svg {
+        font-weight: bold;
+        stroke-width: 2;
+      }
+
+      .sidebar .nav-link.active span {
+        display: none;
+      }
+    }
+  </style>
+  <style>
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'management-home' restID %}">{{ restInstance.name }}</a>
+      <div class="d-flex align-items-center" style="padding-right: 10px;">
+        <a href="{% url 'management-profile' restID %}" class="profile-icon text-white me-2">
+          <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center"
+            style="width: 35px; height: 35px; overflow: hidden;">
+            <img id="profilePreview" src="{{restInstance.display_picture.url}}" alt="DP"
+              style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+        </a>
+        <a href="{% url 'management-logout' restID %}">
+          <div class="logout">
+            <img width="20" height="20" src="https://img.icons8.com/ios/50/exit--v1.png" alt="Logout" />
+            <span class="logout-text">Logout</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="row flex-md-nowrap">
+    <div class="container-fluid">
+      <div class="row">
+
+        <!-- Sidebar -->
+        <div class="col-md-2 d-none d-md-block sidebar" style="padding-top: 6rem; padding-left: 24px;">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'management-home' restID %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="feather feather-home">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <span class="ms-2 d-none d-md-inline">Home</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'management-orders' restID %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="feather feather-shopping-bag">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <path d="M16 10a4 4 0 0 1-8 0"></path>
+                </svg>
+                <span class="ms-2 d-none d-md-inline">Orders</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'management-menu' restID %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="feather feather-menu">
+                  <line x1="3" y1="12" x2="21" y2="12"></line>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+
+                <span class="ms-2 d-none d-md-inline">Menu</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'management-table' restID %}">
+                <img width="18" height="18" src="https://img.icons8.com/material-outlined/24/qr-code.png"
+                  alt="qr-code" />
+                <span class="ms-2 d-none d-md-inline">Table/QR</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'management-insights' restID %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="feather feather-bar-chart-2">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                <span class="ms-2 d-none d-md-inline">Insight</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Mobile sidebar (visible only on small screens) -->
+        <div class="col-12 d-md-none mb-3">
+          <div class="navbar navbar-expand navbar-light bg-transparent shadow-none rounded p-3">
+            <ul class="navbar-nav w-100 justify-content-between">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'management-home' restID %}">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-home">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                  </svg>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'management-orders' restID %}">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-shopping-bag">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                  </svg>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'management-menu' restID %}">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-menu">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                  </svg>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="{% url 'management-table' restID %}">
+                  <img width="18" height="18" src="https://img.icons8.com/material-outlined/24/qr-code.png"
+                    alt="qr-code" />
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'management-insights' restID %}">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-bar-chart-2">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                  </svg>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-12 col-md-10 p-0">
+          <div class="container settings-container">
+
+            <!-- Table Management -->
+            <h5 class="mb-3 fw-bold" style="padding-left: 1rem;">Table Management</h5>
+            <div class="table-management">
+
+              <!-- Add Table Button -->
+              <button type="button" class="add-table-btn" data-bs-toggle="collapse" data-bs-target="#addTableForm"
+                style="color: #6c5648;">
+                <i data-feather="plus-circle"></i> + Add Table
+              </button>
+
+              <!-- Collapsible Add Table Form -->
+              <div class="collapse add-table-form" id="addTableForm">
+                <form method="post" action="{% url 'management-table' restID %}" class="card card-body">
+                  {% csrf_token %}
+                  <div class="row g-2">
+                    <div class="col-md-6">
+                      <label for="id_table_number" class="form-label">Table Number</label>
+                      <input type="number" class="form-control" id="id_table_number" name="table_number" required
+                        min="1" max="99" />
+                    </div>
+                  </div>
+                  <div class="mt-3">
+                    <button type="submit" class="btn btn-primary">Add Table</button>
+                    <button type="button" class="btn btn-outline-secondary ms-2" data-bs-toggle="collapse"
+                      data-bs-target="#addTableForm">Cancel</button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Table List -->
+              <div class="table-list mt-4">
+                {% if tables %}
+                  {% for table in tables %}
+                    <div class="table-item">
+                      <div class="table-number">Table Number:  {{ table.table_number|stringformat:"03d" }}</div>
+                      <div class="table-actions">
+                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-primary"
+                          onclick="toggleQR('qr-{{ forloop.counter }}')">Show QR</a>
+                        <a href="?remove={{ table.id }}" class="btn btn-sm btn-outline-danger">Remove</a>
+                      </div>
+                    </div>
+                    <div id="qr-{{ forloop.counter }}" class="qr-preview-container my-4" style="display: none;">
+                      <div class="print-area shadow-lg p-4 rounded mx-auto text-center"
+                        style="max-width: 420px; border: 1px solid #eee; font-family: 'Poppins', sans-serif;">
+
+                        <h2 style="font-family: 'Georgia', cursive; font-size: 2.2rem;" class="mt-2 mb-1">The {{restInstance.name }}</h2>
+                        <p style="font-style: italic; color: #666;">"Savor the moment, taste the tradition."</p>
+
+                        <!-- QR Box -->
+                        <div
+                          style="border: 2px dashed #fca311; padding: 12px; border-radius: 12px; display: inline-block; margin: 1rem 0;">
+                          <!-- QR IMAGE -->
+                          <img src="{% url 'generate_table_qr' restID table.table_number %}" alt="QR Code for Table {{ table.table_number }}"
+                            style="max-width: 200px; height: auto;" />
+                        </div>
+
+
+                        <p style="color: #fca311; font-weight: bold;" class="mt-2">
+                          <img width="16" height="16" src="https://img.icons8.com/small/32/qr-code.png" alt="QR" />
+                          Scan for our Menu
+                        </p>
+
+                        <p>Table Number: <strong style="color: #fca311;">{{ table.table_number }}</strong></p>
+
+                        <hr class="my-2" />
+
+                        <!-- Footer -->
+                        <p class="text-muted" style="font-size: 0.9rem;">Thank you for dining with us!</p>
+
+
+                        <div class="d-flex justify-content-center gap-3 mt-3 no-print">
+                          <button class="btn btn-outline-secondary btn-sm"
+                            onclick="closeQR('qr-{{ forloop.counter }}')">Close</button>
+                          <button class="btn btn-primary btn-sm" onclick="printQR('qr-{{ forloop.counter }}')">Print QR</button>
+                        </div>
+                      </div>
+                    </div>
+
+
+                  {% endfor %}
+                {% else %}
+                  <div style="margin: auto; width: 90%; text-align: center;">
+                    <img style="width: 20%; margin: auto;" src="{% static 'images/not-found.png' %}" alt="Not found"
+                        srcset="">
+                    <br>
+                      <span style="font-weight: 600;"> Looks like you haven't added any tables. DO IT ASAP!!</span>
+                  </div>
+                {% endif %}
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Footer -->
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <footer class="footer">a <strong>CRE8MARK</strong> production</footer>
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- NEW ORDER RECEIVED NOTIFICATION -->
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 1055">
+    <div id="newOrderToast" class="toast bg-success text-white" role="alert" data-bs-delay="5000">
+      <div class="toast-body">
+        🛎️ <strong>New Order Received!</strong> Check the Preparing tab.
+      </div>
+    </div>
+  </div>
+
+  <!-- WAITER CALLING NOTIFICATION -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
+    <div id="waiterToast" class="toast bg-success text-white" role="alert" data-bs-delay="5000">
+      <div class="toast-body">
+        🛎 Waiter called at <strong>Table <span id="waiterTable"></span></strong>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Feather Icons JS -->
+  <script>
+    if (typeof feather !== "undefined") {
+      feather.replace();
+    }
+
+    function toggleQR(id) {
+      const el = document.getElementById(id);
+      el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function closeQR(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    function printQR(id) {
+      const qrContent = document.querySelector(`#${id} .print-area`).innerHTML;
+      const printWindow = window.open('', '_blank', 'width=600,height=800');
+
+      printWindow.document.write(`
+      <html>
+      <head>
+        <title>Print QR</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <style>
+          body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            padding: 2rem;
+          }
+          img {
+            max-width: 100%;
+            height: auto;
+          }
+          @media print {
+            .no-print {
+              display: none !important;
+            }
+          }
+        </style>
+      </head>
+      <body onload="window.print();">
+        ${qrContent}
+      </body>
+      </html>
+    `);
+
+      printWindow.document.close();
+    }
+
+    
+  </script>
+
+  <!-- ORDER AND WAITER SOCKET -->
+  <script>
+    document.addEventListener("DOMContentLoaded",()=>{
+      function trackNewOrder(orderId) {
+        let stored = JSON.parse(localStorage.getItem("new_orders") || "[]");
+        if (!stored.includes(orderId)) {
+          stored.push(orderId);
+          localStorage.setItem("new_orders", JSON.stringify(stored));
+        }
+      }
+
+
+      // WebSocket setup
+      window.addEventListener("load", () => {
+        const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+        const liveMessageSocket = new WebSocket(`${wsScheme}://${window.location.host}/ws/live/message/socket/{{ restID }}/`)
+
+        liveMessageSocket.onopen = () => console.log("liveMessage WebSocket connected");
+        liveMessageSocket.onclose = () => console.warn("liveMessage WebSocket closed");
+        liveMessageSocket.onerror = (e) => console.error("liveMessage WebSocket error", e);
+        
+
+        // Socket Connection for Order & Waiter Call both
+        liveMessageSocket.onmessage = (event) =>{
+          try{
+            const data = JSON.parse(event.data);
+            if (data.type === "order_notification") {
+              const order = data.order;
+              if (!order) return;
+
+              // Show toast
+              const toastEl = document.getElementById('newOrderToast');
+              if (toastEl) new bootstrap.Toast(toastEl).show();
+
+              trackNewOrder(order.id);
+            }
+            
+            else if (data.type === "waiter_notification") {
+              const tableNo = data.table;
+              
+              const waiterToast = document.getElementById("waiterToast");
+              const waiterTableSpan = document.getElementById("waiterTable");
+
+              if (waiterToast && waiterTableSpan) {
+                waiterTableSpan.textContent = tableNo;
+                new bootstrap.Toast(waiterToast).show();
+              }
+            }
+          
+          }catch (err) {
+            alert("[WS] Message parse error:", err)
+            console.error("[WS] Message parse error:", err);
+          }
+        }
+      });
+    });
+  </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+body {
+  background-color: #FAF9FF;
+}
+
+/* Container */
+.container {
+    margin-top: 15%;
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.container h2 {
+  color: #1A1A2E;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+#orderNumber {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border: 2px solid #1A1A2E;
+  border-radius: 5px;
+  outline: none;
+  margin-bottom: 1rem;
+}
+
+#orderNumber:focus {
+  border-color: #00a97c;
+}
+
+/* Submit Button */
+.submit-btn {
+  background-color: #00a97c;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 100%;
+}
+
+.submit-btn:hover {
+  background-color: #00876c;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .container {
+    max-width: 90%;
+    padding: 1.5rem;
+  }
+
+  .container h2 {
+    font-size: 1.5rem;
+  }
+}

@@ -1,0 +1,256 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{restInstance.name}} Dashboard</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Feather Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="{% static 'css/staff/index.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/staff/home.css' %}?v=2" />
+  <link rel="stylesheet" href="{% static 'css/staff/footer.css' %}?v=3" />
+</head>
+
+<body>
+<style>
+  
+  html, body {
+    overflow: auto;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;     /* Firefox */
+  }
+
+  html::-webkit-scrollbar, 
+  body::-webkit-scrollbar {
+    display: none;             /* Chrome, Safari, Opera */
+  }
+
+.logout {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.logout-text {
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 13px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.logout:hover .logout-text {
+  opacity: 1;
+  transform: translateX(-50%) translateY(2px);
+}
+
+@media (max-width: 576px) {
+  .logout-btn {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+
+  .logout-btn span {
+    display: none; /* hide text on small screen */
+  }
+
+  .profile-icon div {
+    width: 30px !important;
+    height: 30px !important;
+  }
+}
+
+</style>
+<style>
+.profile-icon-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.change-dp-btn {
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #212529;
+  color: #fff;
+  padding: 5px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  display: none;
+  cursor: pointer;
+  white-space: nowrap;
+  z-index: 999;
+}
+
+.profile-icon-wrapper:hover .change-dp-btn {
+  display: block;
+}
+
+#fileInput {
+  display: none;
+}
+
+.size-error {
+  color: red;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+</style>
+
+
+  <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light" style="padding-left: 30px;padding-right: 10px;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'management-home' restID %}">{{restInstance.name}}</a>
+      <div class="d-flex align-items-center">
+
+      <!--- profile image -->
+
+<div class="profile-icon-wrapper">
+  <a class="profile-icon d-flex align-items-center justify-content-center text-white me-2"
+       href="{% url 'management-profile' restID %}"
+       style="cursor:pointer;">
+    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center"
+         style="width: 35px; height: 35px; overflow: hidden;">
+      <img id="profilePreview"
+           src="{{ restInstance.display_picture.url }}"
+           alt="DP"
+           style="width: 100%; height: 100%; object-fit: cover;" />
+    </div>
+  </a>
+</div>
+
+<span id="sizeError" class="size-error"></span>
+
+
+
+
+        <a href="{% url 'management-logout' restID %}">
+          <div class="logout">
+            <img width="20" height="20" src="https://img.icons8.com/ios/50/exit--v1.png" alt="exit--v1"/>
+            <span class="logout-text">Logout</span>
+          </div>
+        </a>
+      </div>
+
+    </div>
+  </nav>
+<!-- Mobile sidebar (visible only on small screens) -->
+  <div class="container-fluid">
+    <div class="row">
+      <div style="display:flex; flex-direction:row; justify-content:center; align-items:center;">
+      <!-- Main content -->
+      <div class="col-md-10 content">
+        <div class="container pt-5 main-content">
+          <div class="row">
+            <!-- View All Orders Card -->
+            <div class="col-md-6 mb-4">
+              <a href="{% url 'management-orders' restID %}" class="text-decoration-none">
+                <div class="dashboard-card">
+                  <div class="card-body">
+                    <h3>
+                      Track Today's<br />FLOW
+                      <span class="arrow">→</span>
+                    </h3>
+                    <div class="dots-container">
+                      <span class="dots">●●●</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <!-- Manage Menu Card -->
+            <div class="col-md-6 mb-4">
+              <a href="{% url 'management-menu' restID %}" class="text-decoration-none">
+                <div class="dashboard-card">
+                  <div class="card-body">
+                    <h3>
+                      Craft the<br />MENU
+                      <span class="arrow">→</span>
+                    </h3>
+                    <div class="dots-container">
+                      <span class="dots">●●</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <!-- Settings Card -->
+            <div class="col-md-4 mb-4">
+              <a href="{% url 'management-table' restID %}" class="text-decoration-none">
+                <div class="dashboard-card">
+                  <div class="card-body">
+                    <h3>
+                      Smart Table<br />SETUP
+                      <span class="arrow">→</span>
+                    </h3>
+                    <div class="dots-container">
+                      <span class="dots">●●●</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <!-- View Insights Card -->
+            <div class="col-md-8 mb-4">
+              <a href="{% url 'management-insights' restID %}" class="text-decoration-none">
+                <div class="dashboard-card">
+                  <div class="card-body">
+                    <h3>
+                      Performance<br />RADAR
+                      <span class="arrow">→</span>
+                    </h3>
+                    <div class="dots-container">
+                      <span class="dots">●●</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Upgrade Plan Link -->
+          <div class="upgrade-plan-container">
+            <a href="{% url 'management-upgrade' restID %}" class="upgrade-plan">
+              Level Up Your Experience <i class="feather-star"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="footer">a <strong>CRE8MARK</strong> production</footer>
+
+  <!-- Bootstrap Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Feather Icons JS -->
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+  <script>
+    feather.replace();
+  </script>
+
+
+
+</body>
+</html>

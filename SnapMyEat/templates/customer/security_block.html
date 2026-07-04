@@ -1,0 +1,50 @@
+<script>
+// Block right-click
+document.addEventListener("contextmenu", function (e) {
+  e.preventDefault();
+});
+
+// Block DevTools shortcuts
+document.onkeydown = function (e) {
+  if (
+    e.keyCode === 123 || // F12
+    (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || // Ctrl+Shift+I or J
+    (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+  ) {
+    return false;
+  }
+};
+</script>
+
+<style>
+  /* Hide actual page on large screen */
+  @media screen and (min-width: 1025px) {
+    body > *:not(#desktop-warning) {
+      display: none !important;
+    }
+
+    #desktop-warning {
+      display: flex !important;
+    }
+  }
+
+  #desktop-warning {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    text-align: center;
+    background-color: #f8f8f8;
+    color: #333;
+    font-size: 1.3rem;
+    font-weight: 500;
+  }
+</style>
+
+<div id="desktop-warning">
+  <div>
+    <h2>This application is not supported on Desktop or Large Screens.</h2>
+    <p>Please use a mobile or tablet device for the best experience.</p>
+  </div>
+</div>

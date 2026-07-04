@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Select your Desire</title>
+    <link rel="stylesheet" href="{% static 'css/modern/categories.css' %}?v=2" />
+    <link rel="stylesheet" href="{% static 'css/modern/categoryPage.css' %}?v=2" />
+  </head>
+  <body>
+    <!-- Navbar start -->
+    <div>
+      <nav class="purple-bg full-width">
+        <div>
+          <div class="tableNumber">
+            <br />
+            <p>
+              Table no.
+              <b>
+                <span>{{ TABLE|stringformat:"02d" }}</span>
+              </b>
+            </p>
+            <br />
+            <a href="{% url 'menu_items' restaurantID=RST.id tableNo=TABLE %}">
+              <button class="catBtn">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="40"
+                  height="40"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M15 18l-6-6 6-6" />
+                </svg>
+              </button>
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <!-- Navbar ends -->
+
+
+    <style>
+      /* @import url('https://fonts.googleapis.com/css2?family=Suranna&display=swap');
+      .dsHeadingH4{
+        font-family: 'Suranna';
+      } */
+
+      /* @import url('https://fonts.googleapis.com/css2?family=Elsie+Swash+Caps:wght@400;900&display=swap');
+      .dsHeadingH4{
+        font-family: 'Elsie Swash Caps';
+      } */
+
+      /* @import url('https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&display=swap'); */
+      /* .dsHeadingH4{
+        font-family: 'Chocolate Classical Sans';
+      } */
+
+      /* @import url('https://fonts.googleapis.com/css2?family=Volkhov:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+      .dsHeadingH4{
+        font-family: 'Volkhov', serif;
+      } */
+
+      /* @import url('https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+      .dsHeadingH4{
+        font-family: 'PT Sans', sans-serif;
+      } */
+
+      /* @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Old+Uyghur&display=swap');
+.dsHeadingH4{
+  font-family: 'Noto Serif Old Uyghur', serif;
+  } */
+
+  /* @import url('https://fonts.googleapis.com/css2?family=Namdhinggo:wght@400;500;600;700;800&display=swap');
+.dsHeadingH4{
+  font-family: 'Namdhinggo', serif;
+  } */
+
+      /* @import url('https://fonts.googleapis.com/css2?family=Eagle+Lake&family=Namdhinggo:wght@400;500;600;700;800&display=swap');
+  .dsHeadingH4{ 
+    font-family: 'Eagle Lake', cursive;
+  } */
+
+  @import url('https://fonts.googleapis.com/css2?family=Eagle+Lake&family=Namdhinggo:wght@400;500;600;700;800&family=Uchen&display=swap');
+   .dsHeadingH4{
+    font-family: 'Namdhinggo';
+  }
+    </style>
+    <!-- Main Content -->
+    <div class="content">
+      <div class="carousel-item active">
+        <a href="{% url 'menu_items' restaurantID=RST.id tableNo=TABLE %}?tags=All">
+          <div class="category-grid-item ds-feature">
+            <div class="category-grid-item-image">
+              <img
+                class="categories-image"
+                src="{% static 'images/modern/category.png' %}"
+                alt="Image"
+              />
+            </div>
+            <div class="category-grid-item-text">
+              <h4 class="dsHeadingH4">All Items</h4>
+              <p>
+                A complete selection of every delicious dish available, offering something for every taste and craving.
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% for category in  CAT %}
+      <!-- Category -->
+      <div class="carousel-item active">
+        <a href="{% url 'menu_items' restaurantID=RST.id tableNo=TABLE %}?category={{category.name}}">
+          <div class="category-grid-item ds-feature">
+            <div class="category-grid-item-image">
+              <!-- src="{{category.image_url}}" -->
+              <img
+              class="categories-image"
+              alt="Image"
+              src="{% static 'images/modern/category.png' %}"
+              />
+            </div>
+            <div class="category-grid-item-text">
+              <h4 class="dsHeadingH4">{{category.name}}</h4>
+              <p>
+                {{category.description}}
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+
+<!-- SECURITY BLOCK -->
+{% include 'customer/security_block.html' %}
+
+
+  </body>
+</html>

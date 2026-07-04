@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Category</title>
+  <link rel="stylesheet" href="{% static 'css/staff/edit_category.css' %}?v=2">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-brand">Restaurant Name</div>
+    <div class="navbar-profile"></div>
+  </nav>
+
+  <div class="content">
+    <a href="{% url 'management-category' restID %}" class="go-back">&larr; Go Back</a>
+    <h1>Add Category</h1>
+
+    <form action="{% url 'management-category-add' restID %}" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="category-cover">
+        <img src="{% static 'images/staff/category_add_edit.jpg' %}" alt="Item Image" id="itemPreview" class="item-image" />
+      </div>
+
+      <div class="category-info">
+        <label><strong>Name:</strong></label>
+        <input type="text" name="name" placeholder="Category name" maxlength="45" required>
+        <div class="mb-3">
+        <label for="descriptionField" class="form-label"><strong>Description:</strong></label>
+        <textarea name="description" id="descriptionField" class="form-control" rows="3" maxlength="105"
+          oninput="checkCharLimit(this)" placeholder="Write description (105 chars) or Regenerate"></textarea>
+
+        <!-- Word/char counter + error -->
+        <div class="d-flex justify-content-between mt-1">
+          <small id="desc-error" class="text-danger"></small>
+          <small id="desc-count" class="text-muted text-end"></small>
+        </div>
+
+        <!-- Regenerate button -->
+        <div class="text-end mt-2">
+          <button type="button" onclick="generateDescription()" class="btn btn-outline-primary btn-sm upload-label">
+            🔁 Regenerate Description
+          </button>
+        </div>
+
+        <button type="submit" class="btn-pink">Add Category</button>
+      </div>
+    </form>
+    <br><br>
+  </div>
+
+  <script>
+
+    function checkCharLimit(textarea) {
+      const maxChars = 105;
+
+      const errorMsg = document.getElementById('desc-error');
+      const countMsg = document.getElementById('desc-count');
+
+      let text = textarea.value;
+      let charCount = text.length;
+
+      const words = text.trim().split(/\s+/).filter(Boolean);  // ✅ define words properly
+      // Always update live count
+      countMsg.textContent = `${words.length} words • ${charCount} characters`;
+
+      // Enforce max character limit
+      if (charCount > maxChars) {
+        textarea.value = text.slice(0, maxChars);
+        const trimmedText = textarea.value;
+        const trimmedWords = trimmedText.trim().split(/\s+/).filter(Boolean);
+        countMsg.textContent = `${trimmedWords.length} words • ${trimmedText.length} characters`;
+        errorMsg.textContent = `⚠️ Max ${maxChars} characters allowed. Trimmed.`;
+        return false;
+      }
+      // All good
+      errorMsg.textContent = '';
+      return true;
+
+    }
+      
+      
+    function generateDescription() {
+      const nameInput = document.querySelector('input[name="name"]');
+      const descField = document.getElementById("descriptionField");
+
+      const name = nameInput.value.trim();
+      if (!name) {
+        alert("Please enter a category name first.");
+        return;
+      }
+
+      fetch("{% url 'description-generate' restID %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}",
+        },
+        body: JSON.stringify({ name }),
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.description) {
+            descField.value = data.description;
+            checkCharLimit(descField);
+          } else {
+            alert("Could not generate description.");
+          }
+        })
+        .catch(() => alert("Something went wrong. Please try again."));
+    }
+  
+
+    //Prevent form submission if description is invalid
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.querySelector("form");
+      const descField = document.getElementById("descriptionField");
+      const nameInput = document.querySelector('input[name="name"]');
+
+      form.addEventListener("submit", function (e) {
+        const isValid = checkWordAndCharLimit(descField);
+        const nameValue = nameInput.value.trim();
+        if(nameValue.length>45){
+          alert("Category name cannot exceed 80 characters.");
+          e.preventDefault();
+        }
+        if (!isValid) {
+          e.preventDefault();
+          alert("Please fix the description before submitting.");
+        }
+      });
+
+
+
+    });
+
+  </script>
+</body>
+</html>

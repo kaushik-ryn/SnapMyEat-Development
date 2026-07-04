@@ -1,0 +1,153 @@
+.filter-container {
+  position: relative;
+  display: inline-block;
+  font-family: 'Helvetica Neue', sans-serif;
+  margin-left: 5%;
+  margin-top: 3%;
+}
+
+.filter-btn {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.filter-btn:hover {
+  background-color: #34495e;
+  transform: translateY(-2px);
+}
+
+.filter-btn:active {
+  transform: translateY(0);
+}
+
+.filter-btn svg {
+  fill: #ecf0f1;
+}
+
+.filter-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  z-index: 1500;
+  width: 280px;
+}
+
+.filter-dropdown label {
+  display: block;
+  font-size: 14px;
+  color: #34495e;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.filter-dropdown select,
+.filter-dropdown input[type="range"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #2c3e50;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-dropdown select:focus,
+.filter-dropdown input[type="range"]:focus {
+  border-color: #3498db;
+  outline: none;
+  box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
+}
+
+.filter-dropdown input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  outline: none;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.filter-dropdown input[type="range"]:hover {
+  opacity: 1;
+}
+
+.filter-dropdown input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #3498db;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.filter-dropdown input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: #3498db;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.filter-dropdown input[type="range"]::-webkit-slider-thumb:hover {
+  background: #2980b9;
+}
+
+.filter-dropdown input[type="range"]::-moz-range-thumb:hover {
+  background: #2980b9;
+}
+
+#price-value {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 14px;
+  color: #2c3e50;
+  font-weight: 500;
+  margin-bottom: 5%;
+}
+
+.filter-aaply-btn {
+  width: 100%;
+  background-color: #3498db;
+  color: #ffffff;
+  border: none;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.filter-aaply-btn:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+}
+
+.filter-aaply-btn:active {
+  transform: translateY(0);
+}

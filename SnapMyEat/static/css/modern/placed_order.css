@@ -1,0 +1,178 @@
+/* General Styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+  background-color: #0a0f2d;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Card Container */
+.card {
+  background: #1a1f3d;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  width: 80%;
+  max-width: 400px;
+  padding: 20px;
+  text-align: center;
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Header Section */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+/* SVG Icon */
+.image {
+  background-color: #ffc107; /* Gold background */
+  border-radius: 50%; /* Circular shape */
+  padding: 15px; /* Adjusted padding for better spacing */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px; /* Fixed width */
+  height: 80px; /* Fixed height */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  animation: popIn 0.5s ease-in-out; /* Animation for a smooth appearance */
+}
+
+.image svg {
+  width: 40px; /* Adjusted SVG size */
+  height: 40px; /* Adjusted SVG size */
+  fill: none;
+  stroke: #0a0f2d; /* Dark blue stroke for contrast */
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: checkmark 0.8s ease-in-out; /* Checkmark drawing animation */
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes checkmark {
+  0% {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+  }
+  100% {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes checkmark {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Title */
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffd700;
+  animation: slideIn 0.5s ease-in-out;
+}
+
+/* Message */
+.message {
+  font-size: 16px;
+  color: #ffffff;
+  margin: 10px 0;
+  line-height: 1.5;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.message b {
+  color: #ffd700;
+}
+
+.message h2 {
+  font-size: 20px;
+  margin: 15px 0;
+  color: #ffd700;
+}
+
+/* Buttons */
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.history {
+  background: #ffd700;
+  color: #0a0f2d;
+}
+
+.track {
+  background: transparent;
+  border: 2px solid #ffd700;
+  color: #eeeeee;
+}
+
+.actions button:hover {
+  transform: scale(1.05);
+}
+
+.history:hover {
+  background: #ffc107;
+}
+
+.track:hover {
+  background: #ffd700;
+  color: #0a0f2d;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

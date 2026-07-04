@@ -1,0 +1,122 @@
+{% extends "customer/starter/base.html" %}
+{% load static %}
+{% block title %}Order Summary{% endblock title %}
+{% block HeadCss %}
+  <!-- CSS -->
+  <link rel="stylesheet" href="{% static 'css/starter/ordersummary.css' %}?v=2">
+{% endblock HeadCss %}
+{% block RST-Name %} {{ RST.name }} {% endblock RST-Name %} 
+{% block TableNo %} {{ table|stringformat:"02d" }} {% endblock TableNo %} 
+{% block ButtonCMD %}
+<a
+  href="{% url 'menu_items' restaurantID=RST.id tableNo=table %}"
+>
+<button class="catBtn">Back</button>
+</a>
+{% endblock ButtonCMD %} 
+{% block BodyContent %}
+
+<span id="current_resturant_id" style="display: none;">{{ RST.id }}</span>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=M+PLUS+1+Code:wght@100..700&display=swap');
+h3{
+  font-family: 'M PLUS 1 Code', monospace;
+  letter-spacing: 0.07rem;
+  /* font-style: italic; */
+  font-size: 1.7rem;
+}
+</style>
+
+<div>
+  <div class="ds-cus">
+      <h3 style="margin: 0; padding: 0;"><b>Confirm  Your Order</b></h3>
+    </div>
+    <br />
+    <div class="order-sum">
+      <h4><b>Order Summary</b></h4>
+      <br />
+      <div id="cartSummary"></div>
+      <div class="total">
+        <br />
+        <br />
+        <div class="total-item">
+          Grand Total: <b>₹0.00</b>
+        </div>
+      </div>
+
+      <br />
+      <br />
+      <div class="pay-ment">
+        <p>Enjoy Your Meal</p>
+      </div>
+    </div>
+    <div class="proceed-btn" id="payAtCounterContainer">
+      <a id="placeOrderLink" href="#">
+        <button class="close-btn-prdso order-final-btn ">Pay at Counter</button>
+      </a>
+    </div>
+  </div>  
+  
+  <script>
+    async function fetchingPrice() {
+  let response = await fetch(
+    "{% url 'fetch_details' restaurantID=RST.id %}",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      body: JSON.stringify(cartData.dishItems),
+    }
+  );
+
+  globalThis.cartItems = await response.json();
+  renderCart();
+  requestAnimationFrame(recalculateTotal);
+  
+}
+
+document
+  .getElementById("placeOrderLink")
+  .addEventListener("click", function (event) {
+    event.preventDefault(); // Prevent default navigation
+
+    let encodedCartItems = encodeURIComponent(JSON.stringify(cartItems));
+    // let placeOrderUrl = `{% url 'placed_order' restaurantID=RST.id tableNo=table %}?cartItems=${encodedCartItems}`;
+
+    // window.location.href = placeOrderUrl;
+    let placeOrderUrl = `{% url 'placed_order' restaurantID=RST.id tableNo=table %}`;
+      fetch(placeOrderUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: new URLSearchParams({
+            cartItems: JSON.stringify(cartItems)
+        })
+    })
+    .then(response => {
+        if (response.redirected) {
+            // If you redirect in Django, this will follow
+            window.location.href = response.url;
+        } else {
+            // Manually redirect to GET version
+            window.location.href = placeOrderUrl;
+        }
+    })
+    .catch(error => {
+        console.error("Error placing order:", error);
+    });
+  });
+  </script>
+
+  <script src="{% static 'js/starter/order_summary.js' %}?v=10" ></script>
+
+  <!-- SECURITY BLOCK -->
+  {% include 'customer/security_block.html' %}
+
+
+{% endblock BodyContent %}

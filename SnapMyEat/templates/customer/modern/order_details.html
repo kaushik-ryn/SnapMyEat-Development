@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Confirmation</title>
+
+  <!-- Bootstrap -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+  <!-- CSS -->
+  <link rel="stylesheet" href="{% static 'css/modern/order_details.css' %}?v=2" />
+</head>
+<body>
+  
+  <!-- Navbar start -->
+  <div>
+    <nav class="purple-bg full-width">
+      <div>
+        <div class="tableNumber">
+          <br />
+          <p>
+            Table no.
+            <b>
+              <span>{{ table|stringformat:"02d" }}</span>
+            </b>
+          </p>
+          <br />
+          <a href="{% url 'menu_items' restaurantID=RST.id tableNo=table %}">
+            <button class="catBtn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="40"
+                height="40"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+          </a>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <!-- Navbar ends -->
+
+  <style>
+    /* @import url('https://fonts.googleapis.com/css2?family=Meow+Script&display=swap');
+    h1{
+      font-family: 'Meow Script', cursive;
+    } */
+     @import url('https://fonts.googleapis.com/css2?family=Cookie&display=swap');
+     h1{
+      font-family: 'Cookie', cursive;
+      font-size: 3rem;
+      font-style: italic;
+     }
+  </style>
+  <div class="container">
+    <h1>Order Details</h1>
+    {% if order_instance %}
+      <div class="order-list">
+        <!-- <h2>Order Details</h2> -->
+        {% for item in order_instance.items %}
+          <div class="order-item">
+            <div>
+              <span class="item-name"><b>{{item.name}}</b></span>
+            </div>
+            {% for size in item.sizes %}              
+              <div class="order-size" style="display: flex; justify-content: space-between;">
+                <div>
+                  <span><small>{{size.size}}</small></span>   
+                  <span class="item-quantity">x{{size.quantity}}</span>
+                </div>
+                <span class="item-price">₹{{size.price}}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+      </div>
+      <div class="order-status-box">
+    <span class="status-label">Order Status:</span>
+    <span class="status preparing">{{ order_instance.status }}</span>
+  </div>
+
+      <div class="total">
+        <span class="total-label">Grand Total:</span>
+        <span class="total-price" style="color: #FFA500;">₹{{order_instance.grand_total}}</span>
+      </div>
+
+      <p class="message">Your order has been placed successfully!</p>
+      <p class="message"><small>Table No. </small><span style="font-size: 1.5rem;">{{order_instance.table.table_number}}</span></p>
+      <button class="back-btn">
+        <small>Order No.</small><br />
+        <span style="font-size: 1.5rem;">{{order_instance.order_no}}</span>
+      </button>
+    {% else %}
+      <div style="margin: auto; width: 90%; text-align: center;">
+        <img style="width: 95%; margin: auto;" src="{% static 'images/not-found.png' %}" alt="Not found" srcset="">
+        <br>
+        <span style="font-weight: 600;"> 🛒 Oops! No order found for the given order number. Please check and try again!</span>
+      </div>
+    {% endif %}
+  </div>
+
+<!-- SECURITY BLOCK -->
+{% include 'customer/security_block.html' %}
+
+
+</body>
+</html>

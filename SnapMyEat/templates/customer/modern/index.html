@@ -1,0 +1,622 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{RST.name}}</title>
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+
+  <!-- Nabar CSS -->
+  <link rel="stylesheet" href="{% static 'css/modern/navbar.css' %}" />
+
+  <!-- Categories Section CSS -->
+  <link rel="stylesheet" href="{% static 'css/modern/categories.css' %}?v=2" />
+
+  <!-- Feature CSS -->
+  <link rel="stylesheet" href="{% static 'css/modern/feature.css' %}" />
+
+  <!-- Filter CSS -->
+  <link rel="stylesheet" href="{% static 'css/modern/filter.css' %}" />
+
+  <!-- Category CSS -->
+  <link rel="stylesheet" href="{% static 'css/modern/category.css' %}" />
+
+  <!-- Item CSS -->
+  <link rel="stylesheet" href="{% static 'css/modern/newitem.css' %}?v=9" />
+  <!-- Modifier CSS -->
+  <link rel="stylesheet" href="{% static 'css/modern/modifier.css' %}" />
+  <!-- Suggestion CSS -->
+  <link rel="stylesheet" href="{% static 'css/modern/suggest.css' %}?v=2" />
+  <!-- Search CSS -->
+  <link rel="stylesheet" href="{% static 'css/modern/search.css' %}?v=3" />
+</head>
+
+<body>
+  <!-- RESTAURANT id -->
+  <span id="current_resturant_id" style="display: none;">{{ RST.id }}</span>
+  <!-- Navbar Start -->
+  <div>
+    <nav>
+      <div class="img-bg">
+        <nav>
+          <div class="nav-text">
+            <p class="rest-name">
+              <small>{{RST.name}}</small>
+            </p>
+            <br />
+            <div class="table-flex">
+              <p class="tab-hed">Table</p>
+              <h3 class="tab-no">
+                <b>{{ TABLE|stringformat:"02d" }}</b>
+              </h3>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </nav>
+  </div>
+  <!-- Categories Section Start -->
+  <div>
+    <div class="category">
+      <div class="category-grid">
+        <!-- Top Picks Start -->
+        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+          <div class="carousel-inner">
+            <!-- Card 1-->
+            <div class="carousel-item active">
+              <a href="{% url 'menu_items' restaurantID=RST.id tableNo=TABLE %}?tags=All">
+                <div class="category-grid-item ds-feature">
+                  <div class="category-grid-item-image">
+                    <img class="categories-image" src="{% static 'images/modern/' %}Project2.png" alt="Image" />
+                    <!-- <img class="categories-image" src="{% static 'images/modern/all_item.png' %}" alt="Image" /> -->
+                  </div>
+                  <div class="category-grid-item-text">
+                    <h4>All Items</h4>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <!-- Card 2-->
+            {% for tag in tags %}
+            <!-- Starting Cards -->
+            <div class="carousel-item">
+              <a href="{% url 'menu_items' restaurantID=RST.id tableNo=TABLE %}?tags={{tag.name}}">
+                <div class="category-grid-item ds-feature">
+                  <div class="category-grid-item-image">
+                    <img class="categories-image" src="{% static 'images/modern/' %}Project3.png" alt="Image" />
+                  </div>
+                  <div class="category-grid-item-text">
+                    <h4>{{tag.name}}</h4>
+                  </div>
+                </div>
+              </a>
+            </div>
+            {% endfor %}
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        </div>
+        <!-- Top Picks End -->
+      </div>
+
+      <style>
+        .dsFontH4 {
+          font-size: 18px;
+        }
+      </style>
+      <!-- CATEGORY 3 -->
+      <div class="category-grid">
+        {% for cat in cat_three %}
+
+        <a href="{% url 'menu_items' restaurantID=RST.id tableNo=TABLE %}?category={{cat.name}}"
+          style="text-decoration: none;">
+          <div class="category-grid-item">
+            <div class="category-grid-item-image">
+              <img class="categories-image" src="{% static 'images/modern/Project1.png' %}" alt="Image" />
+            </div>
+            <div class="category-grid-item-text">
+              <h4 class="dsFontH4">{{cat.name}}</h4>
+            </div>
+          </div>
+        </a>
+        {% endfor %}
+
+      </div>
+
+      <div class="view-all">
+        <a href="{% url 'menu_categories' restaurantID=RST.id tableNo=TABLE %}">
+          <button class="viewall-btn">View More</button>
+        </a>
+      </div>
+    </div>
+  </div>
+  <!-- Categories Section End -->
+  <div class="background-color-grey">
+
+    <!-- Filter & View Order -->
+    <div class="upper-section">
+
+      <!-- Filter Button Start -->
+      <div class="filter-container">
+        <button id="filter-btn" class="filter-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white">
+            <path d="M10 18h4v-2h-4v2zm-7-8v2h14v-2h-14zm18-6h-18v2h18v-2z" />
+          </svg>
+          Filter
+        </button>
+        <div id="filter-dropdown" class="filter-dropdown">
+          {% csrf_token %}
+          <form method="get" action="">
+            <label for="veg-nonveg">Type:</label>
+            <select id="veg-nonveg" name="veg">
+              <option value="all" {% if is_veg == None %}selected{% endif %}>All</option>
+              <option value="true" {% if is_veg == "true" %}selected{% endif %}>Veg</option>
+              <option value="false" {% if is_veg == "false" %}selected{% endif %}>Non-Veg</option>
+            </select>
+            <label for="availability">Availability:</label>
+            <select id="availability" name="availability">
+              <option value="all" {% if availability == None %}selected{% endif %}>All</option>
+              <option value="true" {% if availability == "true" %}selected{% endif %}>Available</option>
+              <option value="false" {% if availability == "false" %}selected{% endif %}>Unavailable</option>
+            </select>
+
+            <label for="max-price">Max Price:</label>
+            <input type="range" id="max-price" min="0" max="1000" step="10" name="price" value="{{ price|default:0 }}"
+              oninput="updatePriceValue(this.value)" />
+            <span id="price-value">{{ price|default:0 }}</span>
+            <br />
+            <button class="btn btn-primary filter-aaply-btn" type="submit">
+              Apply
+            </button>
+          </form>
+        </div>
+      </div>
+      <!-- Filter Button End -->
+
+      <div class="filter-container order-history" id="searchItemBtn" style="display: flex; gap: 7px;">
+        <!-- Ṣearch item btn -->
+        <button id="order-history-btn" class="filter-btn" aria-label="View Order" style="background-color: #ffffff">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="white" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+
+        </button>
+
+        <!-- View Order Btn -->
+        <a href="{% url 'view_order' restaurantID=RST.id tableNo=TABLE %}" style="text-decoration: none"><button
+            id="order-history-btn" class="filter-btn" aria-label="View Order" style="background-color: #ffffff">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#0A0F2D" role="img"
+              stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <!-- Clipboard -->
+              <rect x="6" y="3" width="12" height="16" rx="2" ry="2" />
+              <path d="M9 3v2h6V3" />
+
+              <!-- Checkmark -->
+              <path d="M9 12l2 2l4 -4" />
+
+              <!-- Clock -->
+              <circle cx="18" cy="18" r="3" />
+              <path d="M18 16v2h1.5" />
+            </svg></button></a>
+      </div>
+      <!-- View Order End -->
+
+    </div>
+
+    <!-- ITEMS Start -->
+    <div>
+      <div class="inner-sha cus-margin">
+        <br />
+        <div class="title" style="margin-bottom: 0px; margin-top: 5%">
+          <h3>{{CAT}}</h3>
+        </div>
+        <div>
+          <div>
+            <!-- Item Start -->
+            {% if ITEMS %}
+            {% for item in ITEMS %}
+
+            <div {% if item.tags %} class="item-flex tagAvia" {% else %} class="item-flex" {% endif %}  data-id="{{item.id}}" onclick="expandion_box(this);">
+              <div class="item-img">
+                <img src="{{item.image_url}}" alt="Food" />
+                {% for tag in item.tags.all %}
+                  <div class="tagName">{{ tag.name }}</div>
+                  {% endfor %}
+                </div>
+              <div class="item-text">
+                <div class="ds-flex">
+                  <h2 class="home-item-name">{{item.name}}</h2>
+                </div>
+
+                <p class="descri">
+                  Category: <b>{{item.category.name}}</b><br />
+                  Availability: <b>{% if item.is_available %}YES{% else %}NO{% endif %}</b><br />
+                  {% if item.is_vegetarian %}
+                  <svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Rectangle with green border -->
+                    <rect x="5" y="5" width="90" height="90" fill="none" stroke="#4CAF50" stroke-width="4" rx="5"
+                      ry="5" />
+                    <!-- Centered green circle -->
+                    <circle cx="50" cy="50" r="25" fill="#4CAF50" />
+                  </svg>
+                  <b>Veg</b>
+                  {% elif item.type == "Non-Veg" %}
+                  <svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Rectangle with red border -->
+                    <rect x="5" y="5" width="90" height="90" fill="none" stroke="#f44336" stroke-width="4" rx="5"
+                      ry="5" />
+                    <!-- Centered red circle -->
+                    <circle cx="50" cy="50" r="25" fill="#f44336" />
+                  </svg>
+                  <b>Non Veg</b>
+                  {% else %}
+                  <svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Rectangle with blue border -->
+                    <rect x="5" y="5" width="90" height="90" fill="none" stroke="#2196F3" stroke-width="4" rx="5" ry="5" />
+                    <!-- Centered blue circle -->
+                    <circle cx="50" cy="50" r="25" fill="#2196F3" />
+                  </svg>
+                  <b>Drink</b>
+                  {% endif %}<br />
+                  Serving(s): <br>
+                  {% for size in item.item_sizes.all %}
+                    {% if size.is_default %}
+                      <b>{{ size.size }} - ₹{{ size.price }}</b><span style="color: green; font-size: 0.9em;"> (Recommended)</span><br>
+                    {% else %}
+                      <b>{{ size.size }} - ₹{{ size.price }} </b><br>
+                    {% endif %}
+                  {% endfor %}
+                </p>
+                <div class="inner-flex">
+                  {% for size in item.item_sizes.all %}
+                  {% if size.is_default %}
+                  <div class="price-of-item">
+                    <p class="price">₹{{size.price}}</p>
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+                  <!-- Add to Cart Button -->
+                  <div class="add-to-cart-btn" id="cart-container-{{ item.id }}" onclick="event.stopPropagation()">
+                    <!-- <p>{{item.item_sizes.first.size}}</p> -->
+                    {% if item.item_sizes.count == 1 %}
+                    {% with single_size=item.item_sizes.first.size %}
+                    <button
+                      onclick="increaseQuantity(Number('{{item.id}}'), '{{single_size}}',true); event.stopPropagation(); suggestion_show_hidden('{{item.id}}');"
+                      class="add-to-cart">
+                      Add to Cart
+                    </button>
+                    {% endwith %}
+                    {% else %}
+                    <button
+                      onclick="showPopup('{{item.id}}'); event.stopPropagation(); suggestion_show_hidden('{{item.id}}');"
+                      class="add-to-cart">
+                      Add to Cart
+                    </button>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- modifier START -->
+            <!-- Select variant -->
+            <div class="overlay" onclick="closePopup('{{item.id}}',null)" id="overlay-{{item.id}}"></div>
+            <div class="popup sizePopup" id="sizePopup-{{item.id}}">
+              <div>
+                <h3>Select Size</h3>
+                {% for size in item.item_sizes.all %}
+                <div class="ds-content">
+                  <div class="text-desc">
+                    <label for="ch1" class="text">{{size.size}}</label>
+                  </div>
+                  <div style="display: flex; gap: 20px;">
+                    <small>₹{{size.price}}</small>
+                    <label class="checkBox">
+                      <input type="radio" id="size_{{size.id}}" name="size_{{item.id}}" value="{{size.size}}" />
+                      <div class="transition"></div>
+                    </label>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              <div class="botom-btn-variant">
+                <button class="close-btn" onclick="closePopup('{{item.id}}','apply')">Apply</button>
+              </div>
+            </div>
+
+            <!-- modifier END -->
+            <!-- Item End -->
+            {% endfor %}
+            {% else %}
+            <div style="margin: auto; width: 90%; text-align: center;">
+              <img style="width: 95%; margin: auto;" src="{% static 'images/not-found.png' %}" alt="Not found"
+                srcset="">
+              <br>
+              <span style="font-weight: 600;"> Oops! We couldn't find any matching dishes. Explore other delicious
+                options!</span>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Category end -->
+
+
+  </div>
+
+  <!-- Prev Modifier -->
+  <div id="blur-bg" class="overlay" onclick="closeOrderSummaryPopup()" style="display: none;"></div>
+  <div id="prev-popup-id" class="prev-popup prev-sizePopup">
+    <div class="prev-popup-content">
+      <h3>Manage your order</h3>
+      <div id="prev-popup-items">
+      </div>
+    </div>
+    <div class="botom-btn-variant">
+      <button class="close-btn" onclick="closeOrderSummaryPopup()">Apply</button>
+    </div>
+  </div>
+
+
+  <!-- Footer background -->
+  <div class="footer-gradient">
+    <p>
+      Menu items, nutritional information and prices are set directly by the
+      restaurant.
+    </p>
+  </div>
+
+<!-- Call Waiter Floating Bell -->
+<div class="waiter-bell-wrapper">
+  <button class="call-waiter-btn" onclick="toggleWaiterBox()" style="background-color:#1A1F3D">
+    <!-- Bell Icon -->
+ <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="white" viewBox="0 0 24 24">
+      <path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6V9a6 6 0 10-12 0v7l-2 2v1h16v-1l-2-2z" />
+    </svg>
+  </button>
+
+  <!-- Sliding Box -->
+  <div class="waiter-call-box" id="waiterBox" style="background-color:#1A1F3D; color:#fff">
+    <p style="margin-bottom: 5px;"><strong>Thanks For Callin !</strong></p>
+  </div>
+</div>
+
+
+<style>
+.waiter-bell-wrapper {
+  position: fixed;
+  bottom: 140px;
+  right: 20px;
+  z-index: 9999;
+}
+
+.call-waiter-btn {
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 14px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+
+.waiter-call-box {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  background-color: #fff;
+  color: #333;
+  padding: 10px 14px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  min-width: 180px;
+  opacity: 0;
+  transform: translateX(120%);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+
+.waiter-call-box.show {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+.scroll-info {
+  position: fixed;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  backdrop-filter: blur(8px);
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: bottom 0.6s ease;
+  z-index: 9999;
+}
+.scroll-info.show {
+  bottom: 140px;
+}
+  html, body {
+    overflow: auto;
+    -ms-overflow-style: none;  
+        scrollbar-width: none;     
+  }
+
+  html::-webkit-scrollbar, 
+  body::-webkit-scrollbar {
+    display: none;             
+  }
+
+</style>
+
+<div id="scrollInfoBox" class="scroll-info">
+  <p><strong>Want service at your table? </strong><br>Press the bell icon.</p>
+</div>
+
+<script>
+
+  // AJAX TO CALL WAITER
+  function waiter_call_api() {
+    fetch("{% url 'waiter_call' RST.id %}",{
+      method: "POST",
+      headers:{
+        "X-CSRFToken": "{{ csrf_token }}",
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({table:"{{ TABLE }}"})
+    }).then(async (response) =>{
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Waiter call success:", data);
+      } else {
+        console.warn("Waiter call failed:", data);
+        alert(data.error || "Failed to call waiter.");
+      }
+      
+    }).catch(error =>{
+      console.error("Error: ",error)
+      alert("Something Went Wrong")
+    })
+  }
+
+  function toggleWaiterBox() {
+    const box = document.getElementById("waiterBox");
+    box.classList.add("show");
+    waiter_call_api()
+    setTimeout(() => {
+      box.classList.remove("show");
+    }, 2000);
+  }
+
+  
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const scrollInfoBox = document.getElementById("scrollInfoBox");
+    const allItemsHeading = document.querySelector("h4"); // Or use a better selector if needed
+    let shown = false;
+
+    window.addEventListener("scroll", function () {
+      const scrollY = window.scrollY;
+      const allItemsOffset = allItemsHeading?.offsetTop || 500;
+
+      if (scrollY >= allItemsOffset && !shown) {
+        scrollInfoBox.classList.add("show");
+        shown = true;
+        setTimeout(() => {
+          scrollInfoBox.classList.remove("show");
+        }, 4000);
+      }
+    });
+  });
+</script>
+
+  <!-- Checkout Box -->
+  <div id="orderButtonContainer">
+    <div class="bg-btn-check">
+      <a href="{% url 'order_summary' restaurantID=RST.id tableNo=TABLE %}" class="btn-link">
+        <button class="order-btn neu-button">Proceed to Order</button>
+      </a>
+      <button class="delete-btn neu-delete" onclick="localStorage.clear(); window.location.reload()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
+          <path d="M3 6h18v2H3V6zm2 3h14l-1.5 13h-11L5 9zm5 2v8h2v-8H10zm4 0v8h2v-8h-2z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Search bar -->
+  <div class="serachBg" id="searchBoxFull">
+    <div id="closeSearchBtn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="black" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
+    </div>
+
+    <form method="get">
+      <input type="text" name="dish_name" id="dishSearch" placeholder="Search for item">
+      <button type="submit">Search</button>
+    </form>
+  </div>
+  
+  <script>
+    // Wait for the DOM to be fully loaded
+    document.addEventListener("DOMContentLoaded", function () {
+      // Get the elements by their IDs
+      const searchItemBtn = document.getElementById("searchItemBtn");
+      const closeSearchBtn = document.getElementById("closeSearchBtn");
+      const searchBoxFull = document.getElementById("searchBoxFull");
+
+      // Add click event to show the search box
+      searchItemBtn.addEventListener("click", function () {
+        searchBoxFull.style.display = "block";
+      });
+
+      // Add click event to hide the search box
+      closeSearchBtn.addEventListener("click", function () {
+        searchBoxFull.style.display = "none";
+      });
+    });
+  </script>
+
+
+
+
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+  </script>
+  <script src="{% static 'js/modern/modern_index.js' %}"></script>
+  
+  <script>
+    let currentOpenSuggestion = null;
+
+    function suggestion_show_hidden(itemID) {
+      const suggestionBox = document.querySelector(`#suggested-${itemID}`);
+
+      if (!suggestionBox) return;
+
+      if (currentOpenSuggestion !== null && currentOpenSuggestion.id !== suggestionBox.id) {
+        currentOpenSuggestion.style.display = "none";
+      }
+
+      // If the same suggestion box is already open, do nothing (leave it open)
+      if (currentOpenSuggestion && currentOpenSuggestion.id === suggestionBox.id && suggestionBox.style.display === "block") {
+        return;
+      }
+
+      // Toggle visibility
+      suggestionBox.style.display = "block";
+      currentOpenSuggestion = suggestionBox;
+    }
+
+  </script>
+
+<!-- SECURITY BLOCK -->
+{% include 'customer/security_block.html' %}
+
+
+</body>
+
+</html>

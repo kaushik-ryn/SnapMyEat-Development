@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .content {
+            text-align: center;
+            padding: 40px;
+            border: none;
+            max-width: 500px;
+            width: 90%;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .imageerror {
+            width: 90%;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #ff6f61; /* Accent color for emphasis */
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        /* Button Styles */
+        a {
+            text-decoration: none;
+        }
+
+        button {
+            background: #ff6f61;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background: #e65a50;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <img class="imageerror" src="{% static 'images/error.jpg' %}" alt="Error">
+        <h3><b>Oops! Something Went Wrong</b></h3>
+        <p>We're having trouble fetching the menu. Please try again or go back to the home page.</p>
+        <p>Error: {{error}}</p>
+        <a href="{% url 'menu_items' restaurantID=restaurantID tableNo=table %}">
+            <button>Back to Home</button>
+        </a>
+    </div>
+</body>
+</html>

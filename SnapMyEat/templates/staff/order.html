@@ -1,0 +1,708 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{restInstance.name}} - Orders</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Feather Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="{% static 'css/staff/order.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/staff/index.css' %}?v=2" />
+  <link rel="stylesheet" href="{% static 'css/staff/footer.css' %}" />
+</head>
+
+<body>
+  <style>
+    html,
+    body {
+      overflow: auto;
+      -ms-overflow-style: none;
+      /* Internet Explorer 10+ */
+      scrollbar-width: none;
+      /* Firefox */
+    }
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      display: none;
+      /* Chrome, Safari, Opera */
+    }
+  </style>
+  <style>
+    .profile-icon-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .change-dp-btn {
+      position: absolute;
+      bottom: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #212529;
+      color: #fff;
+      padding: 5px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      display: none;
+      cursor: pointer;
+      white-space: nowrap;
+      z-index: 999;
+    }
+
+    .profile-icon-wrapper:hover .change-dp-btn {
+      display: block;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    .size-error {
+      color: red;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+  </style>
+
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'management-home' restID %}">{{restInstance.name}}</a>
+      <div class="d-flex align-items-center" style="padding-right: 10px;">
+
+        <div class="profile-icon-wrapper">
+          <a class="profile-icon d-flex align-items-center justify-content-center text-white me-2"
+            href="{% url 'management-profile' restID %}" style="cursor:pointer;">
+            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center"
+              style="width: 35px; height: 35px; overflow: hidden;">
+              <img id="profilePreview" src="{{restInstance.display_picture.url}}" alt="DP"
+                style="width: 100%; height: 100%; object-fit: cover;" />
+            </div>
+          </a>
+        </div>
+
+        <a href="{% url 'management-logout' restID %}">
+          <div class="logout">
+            <img width="20" height="20" src="https://img.icons8.com/ios/50/exit--v1.png" alt="exit--v1" />
+            <span class="logout-text">Logout</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-md-2 d-none d-md-block sidebar" style="padding-top: 6rem;">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'management-home' restID %}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="feather feather-home">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+              <span class="ms-2 d-none d-md-inline">Home</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="{% url 'management-orders' restID %}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="feather feather-shopping-bag">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              <span class="ms-2 d-none d-md-inline">Orders</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'management-menu' restID %}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="feather feather-menu">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+              <span class="ms-2 d-none d-md-inline">Menu</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'management-table' restID %}">
+              <img width="18" height="18" src="https://img.icons8.com/material-outlined/24/qr-code.png" alt="qr-code" />
+              <span class="ms-2 d-none d-md-inline">Table/QR</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'management-insights' restID %}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="feather feather-bar-chart-2">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+              <span class="ms-2 d-none d-md-inline">Insight</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Mobile sidebar (visible only on small screens) -->
+      <div class="col-12 d-md-none mb-3">
+        <div class="navbar navbar-expand navbar-light bg-transparent shadow-none rounded p-3">
+          <ul class="navbar-nav w-100 justify-content-between">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'management-home' restID %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="feather feather-home">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'management-orders' restID %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="feather feather-shopping-bag">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <path d="M16 10a4 4 0 0 1-8 0"></path>
+                </svg>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'management-menu' restID %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="feather feather-menu">
+                  <line x1="3" y1="12" x2="21" y2="12"></line>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'management-table' restID %}">
+                <img width="18" height="18" src="https://img.icons8.com/material-outlined/24/qr-code.png"
+                  alt="qr-code" />
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'management-insights' restID %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="feather feather-bar-chart-2">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Main content -->
+      <div class="col-md-10 content">
+        <!-- Page content -->
+        <div class="container">
+          <div class="order-header">
+            <div>
+              <h1 class="orders-title">Order</h1>
+              <a href="{% url 'management-seeOrders' restID %}" class="see-all-link">See all orders</a>
+            </div>
+          </div>
+
+          <!-- Search Box -->
+          <div class="search-box">
+            <form method="get" action="{% url 'management-orders' restID %}">
+              <input type="hidden" name="status" value="{{ status_filter }}">
+              <div class="input-group">
+                <span class="input-group-text bg-white border-end-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-search">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </span>
+                <input type="text" name="search" class="form-control border-start-0" style="padding-left: 2px;"
+                  placeholder="Search by order number or table number" value="{{query}}" />
+                <button class="btn btn-outline-secondary" type="submit">
+                  Search by
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Filter Options -->
+          <div class="filter-options mb-4">
+            <a href="?{% if query %}search={{ query }}&{% endif %}"
+              class="filter-badge {% if not status_filter %}active{% endif %}">All</a>
+            <a href="?status=pending{% if query %}&search={{ query }}{% endif %}"
+              class="filter-badge {% if status_filter == 'pending' %}active{% endif %}">Pending</a>
+            <a href="?status=preparing{% if query %}&search={{ query }}{% endif %}"
+              class="filter-badge {% if status_filter == 'preparing' %}active{% endif %}">Preparing</a>
+            <a href="?status=ready{% if query %}&search={{ query }}{% endif %}"
+              class="filter-badge {% if status_filter == 'ready' %}active{% endif %}">Ready to Serve</a>
+            <a href="?status=completed{% if query %}&search={{ query }}{% endif %}"
+              class="filter-badge {% if status_filter == 'completed' %}active{% endif %}">Completed</a>
+            <a href="?status=cancelled{% if query %}&search={{ query }}{% endif %}"
+              class="filter-badge {% if status_filter == 'cancelled' %}active{% endif %}">Cancelled</a>
+          </div>
+
+          <!-- Orders Table -->
+          {% if orders %}
+          <div class="table-responsive" style="overflow-x: auto; white-space: nowrap;">
+
+            <table class="table table-hover order-table">
+              <thead class="table-light">
+                <tr>
+                  <th>Order</th>
+                  <th>Time</th>
+                  <th>Item</th>
+                  <th>Table No.</th>
+                  <th>Billing</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for order in orders %}
+
+                <!-- <tr class="order-row" data-order-id="{{ order.id }}" data-created-at="{{ order.created_at|date:'c' }}"> -->
+                <tr class="order-row {{ order.status }}" data-order-id="{{ order.id }}">
+
+
+                  <td>{{order.order_no}}</td>
+                  <td>{{ order.created_at|date:"d F Y, h:i A" }}</td>
+
+                  <td>
+                    <ul style="margin: 0; padding-left: 1rem">
+                      {% for item in order.items %}
+                      {% for size in item.sizes%}
+                      <li
+                      data-name="{{ item.name }} ({{ size.size }})"
+                      data-qty="{{ size.quantity }}"
+                      data-price="{{ size.price }}"
+                      >
+                        {{ item.name }} ({{ size.size }}) x {{ size.quantity }}
+                      </li>
+                      {% endfor %}
+                      {% endfor %}
+                    </ul>
+                  </td>
+                  <td>{{order.table.table_number}}</td>
+                  <td>
+                    ₹{{order.grand_total}}
+                    <i data-feather="file-text" class="ms-2 text-success print-icon" style="cursor: pointer;"
+                      onclick="printBill(this)" title="Print Bill"></i>
+                  </td>
+
+                  <td>
+                    <select name="status" data-order-id="{{ order.id }}"
+                      class="form-select form-select-sm status-dropdown">
+                      <option value="pending" {% if order.status == "pending" %}selected{% endif %}>Pending</option>
+                      <option value="preparing" {% if order.status == "preparing" %}selected{% endif %}>Preparing</option>
+                      <option value="ready" {% if order.status == "ready" %}selected{% endif %}>Ready</option>
+                      <option value="completed" {% if order.status == "completed" %}selected{% endif %}>Completed</option>
+                      <option value="cancelled" {% if order.status == "cancelled" %}selected{% endif %}>Cancelled</option>
+                    </select>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div style="margin: auto; width: 90%; text-align: center;">
+            <img style="width: 20%; margin: auto;" src="{% static 'images/not-found.png' %}" alt="Not found" srcset="">
+            <br>
+            <span style="font-weight: 600;">
+              Oops! No order found for the given query. Please check and try again!
+            </span>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <footer class="footer">a <strong>CRE8MARK</strong> production</footer>
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- NEW ORDER RECEIVED NOTIFICATION -->
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 1055">
+    <div id="newOrderToast" class="toast bg-success text-white" role="alert" data-bs-delay="5000">
+      <div class="toast-body">
+        🛎️ <strong>New Order Received!</strong> Check the Preparing tab.
+      </div>
+    </div>
+  </div>
+
+  <!-- WAITER CALLING NOTIFICATION -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
+    <div id="waiterToast" class="toast bg-success text-white" role="alert" data-bs-delay="5000">
+      <div class="toast-body">
+        🛎 Waiter called at <strong>Table <span id="waiterTable"></span></strong>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- BILL -->
+  <div id="printArea" style="display: none;">
+    <h2 style="text-align: center;">{{ restInstance.name }}</h2>
+    <p><strong>Order ID:</strong> <span id="printOrderId"></span></p>
+    <p><strong>Date & Time:</strong> <span id="printDateTime"></span></p>
+    <p><strong>Table No:</strong> <span id="printTableNo"></span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Qty</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody id="printItems"></tbody>
+    </table>
+    <p><strong>Subtotal:</strong> ₹<span id="printSubtotal"></span></p>
+    <p><strong>Tax (5%):</strong> ₹<span id="printTax"></span></p>
+    <p><strong>Total:</strong> ₹<span id="printTotal"></span></p>
+  </div>
+
+
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const tbody = document.querySelector(".order-table tbody");
+
+      // Helper to store new orders persistently
+      function trackNewOrder(orderId) {
+        let stored = JSON.parse(localStorage.getItem("new_orders") || "[]");
+        if (!stored.includes(orderId)) {
+          stored.push(orderId);
+          localStorage.setItem("new_orders", JSON.stringify(stored));
+        }
+      }
+
+
+      // FUNCTION: Update row class based on status
+      function applyRowStatusClass(dropdown) {
+        const row = dropdown.closest(".order-row");
+        if (!row) return;
+        row.classList.remove("ready", "pending","preparing", "completed", "cancelled");
+        row.classList.add(dropdown.value);
+      }
+
+      // API FUNCTION OT UPDATE STATUS
+      function handleStatusChange(e) {
+        const dropdown = e.target;
+        const orderId = dropdown.dataset.orderId;
+        const newStatus = dropdown.value;
+
+        applyRowStatusClass(dropdown);
+
+        fetch("{% url 'update-order-status' restID %}", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}",
+          },
+          body: JSON.stringify({ order_id: orderId, status: newStatus }),
+        })
+          .then((res) => {
+            if (!res.ok) throw new Error("Failed to update status");
+            return res.json();
+          })
+          .then((data) => {
+            const row = dropdown.closest(".order-row");
+            // ✅ Get current filter status from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeFilter = urlParams.get("status") || "all";
+            if (activeFilter !== "all" && newStatus !== activeFilter && row) {
+              url = window.location.url
+              row.style.transition = "opacity 0.5s ease-out";
+              row.style.opacity = "0";
+              setTimeout(() => row.remove(), 500); // Remove after fade-out
+            }
+            console.log("Status updated:", data);
+          })
+          .catch((err) => {
+            alert("Status update failed.");
+            console.error(err);
+          });
+      }
+
+      // Attach listener to all existing dropdowns
+      document.querySelectorAll(".status-dropdown").forEach((dropdown) => {
+        dropdown.addEventListener("change", handleStatusChange);
+        applyRowStatusClass(dropdown);
+      });
+
+      // WebSocket setup
+      window.addEventListener("load", () => {
+        const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+        const liveMessageSocket = new WebSocket(`${wsScheme}://${window.location.host}/ws/live/message/socket/{{ restID }}/`)
+
+        liveMessageSocket.onopen = () => console.log("liveMessage WebSocket connected");
+        liveMessageSocket.onclose = () => console.warn("liveMessage WebSocket closed");
+        liveMessageSocket.onerror = (e) => console.error("liveMessage WebSocket error", e);
+        
+
+        // Socket Connection for Order & Waiter Call both
+        liveMessageSocket.onmessage = (event) =>{
+          const data = JSON.parse(event.data);
+          console.log(data);
+          if (data.type === "order_notification") {
+            console.log("new order",data.order);
+            const order = data.order;
+            if (!order || !tbody) return;
+            console.log("New Order:", order);
+            // Show toast
+            const toastEl = document.getElementById('newOrderToast');
+            if (toastEl) {
+              const toast = new bootstrap.Toast(toastEl);
+              toast.show();
+            }
+
+            // Get current filter from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeStatus = urlParams.get("status");
+
+            // Don't show if we're filtered and the order doesn't match
+            if (activeStatus && order.status !== activeStatus) {
+              console.log(`Ignoring order ${order.id} due to active filter`);
+              trackNewOrder(order.id);
+              return;
+            }
+
+
+            // Build item list
+            const itemList = order.items.map(item =>
+              item.sizes.map(size =>
+                `<li>${item.name} (${size.size}) x ${size.quantity}</li>`
+              ).join('')
+            ).join('');
+
+            // Create new row
+            const row = document.createElement("tr");
+            
+            row.className = `order-row ${order.status} highlight-new`; // status class
+            row.setAttribute('data-order-id', order.id);
+
+            row.innerHTML = `
+            <td>${order.order_no}</td>
+            <td>${order.time}</td>
+            <td><ul style="margin: 0; padding-left: 1rem">${itemList}</ul></td>
+            <td>${order.table}</td>
+            <td>${order.total}</td>
+            <td>
+              <select name="status" data-order-id="${order.id}" class="form-select form-select-sm status-dropdown">
+                <option value="pending" selected>Pending</option>
+                <option value="preparing">Preparing</option>
+                <option value="ready">Ready</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </td>
+            `;
+
+            tbody.prepend(row);
+
+            // Bind status change to new dropdown
+            // Add listener to new dropdown
+            const dropdown = row.querySelector(".status-dropdown");
+            dropdown.addEventListener("change", handleStatusChange);
+            applyRowStatusClass(dropdown)
+
+
+            // Remove highlight after 30 seconds
+            setTimeout(() => {
+              row.classList.remove("highlight-new");
+            }, 30000);
+          };
+          
+          if (data.type === "waiter_notification") {
+            console.log("new waiter",data.table);
+            const tableNo = data.table;
+            console.log("waiter call",data);
+            
+            const waiterToast = document.getElementById("waiterToast");
+            const waiterTableSpan = document.getElementById("waiterTable");
+
+            if (waiterToast && waiterTableSpan) {
+              waiterTableSpan.textContent = tableNo;
+              new bootstrap.Toast(waiterToast).show();
+            }
+          }
+        }
+
+      });
+
+      // TRACK NEW ORDERS WHILE U WERE ON OTHER FILTER
+      const newOrders = JSON.parse(localStorage.getItem("new_orders") || "[]");
+      const urlParams = new URLSearchParams(window.location.search);
+      const currentStatus = urlParams.get("status") || "all";
+      if (currentStatus === "preparing" || !urlParams.has("status")) {
+        newOrders.forEach((id) => {
+          const row = document.querySelector(`.order-row[data-order-id="${id}"]`);
+          if (row) {
+            row.classList.add("highlight-new");
+            setTimeout(() => row.classList.remove("highlight-new"), 30000);
+          }
+        });
+
+        // Clear the memory once applied
+        localStorage.removeItem("new_orders");
+      }
+
+    });
+  </script>
+
+
+
+  <style>
+    .highlight-new {
+      background-color: #d7c6e9 !important;
+      animation: glowSlide 0.5s ease-out, subtlePulse 1.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowSlide {
+      0% {
+        transform: translateX(-30%);
+        opacity: 0.5;
+      }
+
+      100% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes subtlePulse {
+      from {
+        box-shadow: 0 0 3px 1px rgba(153, 102, 255, 0.2);
+      }
+
+      to {
+        box-shadow: 0 0 8px 3px rgba(153, 102, 255, 0.35);
+      }
+    }
+
+    .order-row.preparing {
+      /* background-color: #f0e6ff; */
+      background-color: #c5d2ee;  
+      /* light lavender  */
+    }
+    .order-row.ready {
+      /* background-color: #e0ffe0; */
+      background-color: #bfe9bf;
+      /* light green */
+    }
+
+    .order-row.completed {
+      background-color: #d0f0ff;
+      /* light blue */
+    }
+
+    .order-row.cancelled {
+      /* background-color: #ffe0e0; */
+      background-color: #e6b5b5;
+      /* light red */
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+  
+  <script>
+    feather.replace();
+  </script>
+  
+
+<!-- BILL SCRIPT -->
+  <script>
+    function printBill(icon) {
+      const row = icon.closest('tr');
+      const orderId = row.querySelector('td:nth-child(1)').textContent.trim();
+      const dateTime = row.querySelector('td:nth-child(2)').textContent.trim();
+      const items = row.querySelectorAll('td:nth-child(3) li');
+      const tableNo = row.querySelector('td:nth-child(4)').textContent.trim();
+      const amount = parseFloat(row.querySelector('td:nth-child(5)').textContent.replace('₹', '').trim());
+
+      // Fill bill content
+      document.getElementById('printOrderId').textContent = orderId;
+      document.getElementById('printDateTime').textContent = dateTime;
+      document.getElementById('printTableNo').textContent = tableNo;
+
+      const tbody = document.getElementById('printItems');
+      tbody.innerHTML = '';
+
+      items.forEach(item => {
+        const name = item.dataset.name;
+        const qty = parseInt(item.dataset.qty);
+        const price = parseFloat(item.dataset.price);
+        
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+        <td style="padding: 6px;">${name}</td>
+        <td style="padding: 6px;">${qty}</td>
+        <td style="padding: 6px;">₹${price}</td>
+      `;
+        tbody.appendChild(tr);
+      });
+
+      const tax = (amount * 0.05).toFixed(2);
+      const total = (amount + parseFloat(tax)).toFixed(2);
+
+      document.getElementById('printSubtotal').textContent = amount.toFixed(2);
+      document.getElementById('printTax').textContent = tax;
+      document.getElementById('printTotal').textContent = total;
+
+      // Generate bill content
+      const billHTML = document.getElementById('printArea').innerHTML;
+      const printWindow = window.open('', '_blank', 'width=800,height=600');
+
+      // Add load-safe printing
+      printWindow.document.write(`
+      <html>
+        <head>
+          <title>Order Bill</title>
+          <style>
+            body { font-family: Arial; margin: 20px; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #000; padding: 6px; text-align: left; }
+            th { background-color: #f2f2f2; }
+          </style>
+        </head>
+        <body onload="window.print();">
+          ${billHTML}
+        </body>
+      </html>
+    `);
+      printWindow.document.close();
+    }
+  </script>
+
+
+</body>
+
+</html>

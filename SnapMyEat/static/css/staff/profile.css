@@ -1,0 +1,109 @@
+body {
+  font-family: "Inter", sans-serif;
+  background-color: #fefbf6;
+}
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #4a3b31;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+}
+.section-title .material-icons {
+  margin-right: 8px;
+  color: #c08261;
+}
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #f3efea;
+}
+.info-item:last-child {
+  border-bottom: none;
+}
+.info-label {
+  color: #786a60;
+  font-weight: 500;
+}
+.info-value {
+  color: #4a3b31;
+}
+.stat-card {
+  background-color: #f9f4ef;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+  border: 1px solid #e8dfd8;
+}
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #c08261;
+}
+.stat-label {
+  color: #786a60;
+  font-size: 0.875rem;
+}
+.template-card {
+  border: 2px solid #e8dfd8;
+  border-radius: 10px;
+  padding: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.template-card.selected {
+  border-color: #c08261;
+  box-shadow: 0 0 0 3px rgba(192, 130, 97, 0.3);
+}
+.template-card:hover:not(.selected) {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+.template-image {
+  width: 100%;
+  height: 120px;
+  background-color: #f3efea;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a9998d;
+}
+.template-name {
+  font-weight: 600;
+  color: #4a3b31;
+  margin-bottom: 4px;
+}
+.template-description {
+  font-size: 0.875rem;
+  color: #786a60;
+}
+.button {
+  background-color: #c08261;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+.button:hover {
+  background-color: #a96e50;
+}
+.edit-button {
+  background-color: #f9f4ef;
+  color: #c08261;
+  border: 1px solid #c08261;
+}
+.edit-button:hover {
+  background-color: #e8dfd8;
+}

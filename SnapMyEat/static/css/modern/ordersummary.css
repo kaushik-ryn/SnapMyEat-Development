@@ -1,0 +1,288 @@
+/* Paper-like Order Summary with Original Color Theme */
+:root {
+  --primary-bg: #0A0F2D; /* Original dark blue background */
+  --secondary-bg: #1A1F3D; /* Slightly lighter dark blue */
+  --accent-gold: #FFD700; /* Original gold accent */
+  --accent-gold-light: #FFE55C; /* Lighter gold */
+  --text-light: #FFFFFF; /* White text */
+  --text-dark: #2A2F4D; /* Dark text for cards */
+  --paper-bg: rgba(255, 253, 245, 0.95); /* Creamy paper color */
+  --paper-line: rgba(0, 0, 0, 0.05); /* Subtle paper lines */
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --border-radius: 8px;
+  --transition: all 0.3s ease;
+}
+
+/* Base Styles with Paper Texture */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--primary-bg);
+  color: var(--text-light);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-image: 
+    url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h100v100H0z" fill="none"/><path d="M0 10 L100 10 M0 20 L100 20 M0 30 L100 30 M0 40 L100 40 M0 50 L100 50 M0 60 L100 60 M0 70 L100 70 M0 80 L100 80 M0 90 L100 90" stroke="rgba(255,255,255,0.03)" stroke-width="1"/></svg>');
+}
+
+/* Paper Texture Overlay (subtle) */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    linear-gradient(rgba(10, 15, 45, 0.9), rgba(10, 15, 45, 0.9)),
+    url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h100v100H0z" fill="none"/><path d="M20 20h60v60H20z" stroke="rgba(255,215,0,0.03)" stroke-width="1" fill="none"/></svg>');
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Navbar - Kept original colors */
+nav.purple-bg {
+  background: linear-gradient(135deg, var(--primary-bg), var(--secondary-bg));
+  padding: 1rem 1.5rem;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tableNumber {
+  text-align: center;
+  color: var(--text-light);
+  font-size: 1.125rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tableNumber span {
+  color: var(--accent-gold);
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.catBtn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: var(--text-light);
+  transition: var(--transition);
+  padding: 0.5rem;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.catBtn:hover {
+  background: rgba(255, 215, 0, 0.2);
+  color: var(--accent-gold);
+}
+
+/* Paper-like Order Card */
+.order-sum {
+  background: var(--paper-bg);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  color: var(--text-dark);
+  margin-bottom: 5rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  
+  /* Paper texture effect */
+  background-image: 
+    linear-gradient(var(--paper-bg), var(--paper-bg)),
+    url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M0 10 L100 10 M0 20 L100 20 M0 30 L100 30 M0 40 L100 40 M0 50 L100 50 M0 60 L100 60 M0 70 L100 70 M0 80 L100 80 M0 90 L100 90" stroke="%23000000" stroke-width="0.3" opacity="0.05"/></svg>');
+}
+
+/* Torn paper edge effect */
+.order-sum::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: 
+    linear-gradient(45deg, transparent 33.333%, var(--paper-bg) 33.333%, var(--paper-bg) 66.667%, transparent 66.667%),
+    linear-gradient(-45deg, transparent 33.333%, var(--paper-bg) 33.333%, var(--paper-bg) 66.667%, transparent 66.667%);
+  background-size: 20px 40px;
+  background-repeat: repeat-x;
+}
+
+.order-sum h5 {
+  font-size: 1.25rem;
+  color: var(--text-dark);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+/* Cart Items - Paper Cards */
+.pdr-bg-color {
+  background: white;
+  padding: 1.25rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: var(--transition);
+  border-left: 3px solid var(--accent-gold);
+  margin-bottom: 0.75rem;
+}
+
+.pdr-bg-color:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.summary-item {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 50px;
+  padding: 0.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.quantity-btn {
+  background: var(--accent-gold);
+  color: var(--primary-bg);
+  border: none;
+  font-weight: bold;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.quantity-btn:hover {
+  background: var(--accent-gold-light);
+}
+
+/* Total Section - Receipt style */
+.total {
+  text-align: right;
+  font-size: 1.25rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 2px dashed rgba(0, 0, 0, 0.2);
+}
+
+.total-item {
+  color: var(--text-dark);
+  font-weight: 700;
+}
+
+.total-item b {
+  color: var(--text-dark);
+  font-size: 1.5rem;
+}
+
+/* Order Button - Gold seal effect */
+.proceed-btn {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--secondary-bg);
+  padding: 1.25rem;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.order-final-btn {
+  background: var(--accent-gold);
+  color: var(--primary-bg);
+  border: none;
+  font-weight: 700;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: var(--transition);
+  width: 80vw;
+  /* max-width: 400px; */
+  box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.2),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Button paper texture */
+.order-final-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h100v100H0z" fill="none"/><path d="M20 20h60v60H20z" stroke="rgba(0,0,0,0.1)" stroke-width="1" fill="none"/></svg>');
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.order-final-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 6px 12px rgba(0, 0, 0, 0.3),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.order-final-btn:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dsBody {
+    padding: 1.5rem 1rem;
+  }
+  
+  .order-sum {
+    padding: 1.5rem;
+  }
+  
+  .order-sum::after {
+    height: 15px;
+    background-size: 15px 30px;
+  }
+}
+
+h3{
+  text-align: center;
+}
+
+.quantity-controls{
+  width: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+
+body {
+  font-family: 'Ubuntu', sans-serif;
+}

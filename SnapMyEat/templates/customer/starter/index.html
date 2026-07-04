@@ -1,0 +1,480 @@
+{% extends "customer/starter/base.html" %}
+{% load static %}
+{% block title %} {{ RST.name }} {% endblock %}
+
+{% block HeadCss %}
+<!-- Feature CSS -->
+<link rel="stylesheet" href="{% static 'css/starter/feature.css' %}?v=1" />
+
+<!-- Category CSS -->
+<link rel="stylesheet" href="{% static 'css/starter/category.css' %}?v=1" />
+
+<!-- Item CSS -->
+<link rel="stylesheet" href="{% static 'css/starter/newitem.css' %}?v=3" />
+
+<!-- Checkout CSS -->
+<link rel="stylesheet" href="{% static 'css/starter/checkout.css' %}" />
+
+<!-- Category Drop CSS -->
+<link rel="stylesheet" href="{% static 'css/starter/categorydrop.css' %}?v=5" />
+
+<!-- Modifier CSS -->
+<link rel="stylesheet" href="{% static 'css/starter/modifier.css' %}?v=4" />
+
+<!-- Filter Btn -->
+<link rel="stylesheet" href="{% static 'css/starter/filter.css' %}?v=2" />
+{% endblock HeadCss %}
+{% block RST-Name %} {{ RST.name }} {% endblock RST-Name %}
+{% block TableNo %} {{ TABLE|stringformat:"02d" }} {% endblock TableNo %}
+{% block ButtonCMD %}
+<a href="{% url 'menu_categories' restaurantID=RST.id tableNo=TABLE %}">
+  <button class="catBtn">Category</button>
+</a>
+{% endblock ButtonCMD %}
+{% block BodyContent %}
+<span id="current_resturant_id" style="display: none;">{{ RST.id }}</span>
+<div class="filter-container">
+  <button id="filter-btn" class="filter-btn">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="black">
+      <path d="M10 18h4v-2h-4v2zm-7-8v2h14v-2h-14zm18-6h-18v2h18v-2z" />
+    </svg>
+    Filter
+  </button>
+  <div id="filter-dropdown" class="filter-dropdown">
+    {% csrf_token %}
+    <form method="get" action="">
+      <label for="veg-nonveg">Type:</label>
+      <select id="veg-nonveg" name="veg">
+        <option value="all" {% if is_veg == None %}selected{% endif %}>All</option>
+        <option value="true" {% if is_veg == "true" %}selected{% endif %}>Veg</option>
+        <option value="false" {% if is_veg == "false" %}selected{% endif %}>Non-Veg</option>
+      </select>
+      <label for="availability">Availability:</label>
+      <select id="availability" name="availability">
+        <option value="all" {% if availability == None %}selected{% endif %}>All</option>
+        <option value="true" {% if availability == "true" %}selected{% endif %}>Available</option>
+        <option value="false" {% if availability == "false" %}selected{% endif %}>Unavailable</option>
+      </select>
+
+      <label for="max-price">Max Price:</label>
+      <input type="range" id="max-price" min="0" max="1000" step="10" name="price" value="{{ price|default:0 }}"
+        oninput="updatePriceValue(this.value)" />
+      <span id="price-value">{{ price|default:0 }}</span>
+      <br />
+      <button class="btn btn-primary filter-aaply-btn" type="submit">
+        Apply
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Filter Button End -->
+
+<!-- View Order Start -->
+<div class="filter-container order-history">
+  <a href="{% url 'view_order' restaurantID=RST.id tableNo=TABLE %}" style="text-decoration: none;">
+
+    <button id="order-history-btn" class="filter-btn" aria-label="View Order">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img">
+        <!-- Clipboard -->
+        <rect x="6" y="3" width="12" height="16" rx="2" ry="2" />
+        <path d="M9 3v2h6V3" />
+
+        <!-- Checkmark -->
+        <path d="M9 12l2 2l4 -4" />
+
+        <!-- Clock -->
+        <circle cx="18" cy="18" r="3" />
+        <path d="M18 16v2h1.5" />
+      </svg>
+      <span>View Order</span>
+    </button>
+  </a>
+</div>
+<!-- View Order End -->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
+
+  .fdCusFont {
+    font-family: "Dancing Script", sans-serif;
+    font-size: 1.3rem;
+  }
+</style>
+
+<!-- Feature Card -->
+<div>
+  <div class="feature-flex">
+    <div class="image-feature">
+      <!-- Crousel Start -->
+      <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <!-- Card 1-->
+          <a href="{% url 'menu_items' restaurantID=RST.id tableNo=TABLE %}?tags=All">
+            <div class="carousel-item active" data-bs-interval="2000">
+              <img src="{% static 'images/starter/category/all_item.jpg' %}" class="d-block w-100" alt="img1" />
+              <div class="feature-text">
+                <span class="fdCusFont">
+                  All Items
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14m-7-7l7 7-7 7"></path>
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </a>
+          <!-- Card 2-->
+          {% for tag in tags %}
+          <a href="{% url 'menu_items' restaurantID=RST.id tableNo=TABLE %}?tags={{tag.name}}">
+            <div class="carousel-item" data-bs-interval="2000">
+              <img src="{% static tag.image_filename %}" class="d-block w-100" alt="img1" />
+              <div class="feature-text">
+                <span class="fdCusFont">
+                  {{tag.name}}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14m-7-7l7 7-7 7"></path>
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      <!-- Crousel End -->
+    </div>
+  </div>
+</div>
+<!-- Feature end -->
+
+<!-- Item Start -->
+<div>
+  <div class="inner-sha cus-margin">
+    <br />
+    <div class="title" style="margin-bottom: 0px; margin-top: 5%;">
+      <h3>{{CAT}}</h3>
+    </div>
+    <div>
+      <div>
+        <!-- Item Start -->
+        {% if ITEMS %}
+
+        {% for item in ITEMS %}
+        <div>
+          <div {% if item.tags %} class="item-flex tagAvia" {% else %} class="item-flex" {% endif %} data-id="{{item.id}}" onclick="expandion_box(this)">
+            <div class="item-img">
+              <!-- <img src="{% static 'images/modern/food.jpg' %}" alt="Food" /> -->
+              <!-- <img src="{% static 'images/staff/placeholder/cake/1.png' %}" alt="Food" /> -->
+              <img src="{{item.image_url}}" alt="Food" />
+              {% for tag in item.tags.all  %}
+              <div class="tagName">{{tag.name}}</div>
+              {% endfor %}
+            </div>
+            <div class="item-text">
+              <div class="ds-flex">
+                  <h2 class="home-item-name" style="width:200px;">{{item.name}}</h2>
+                </div>
+              <p class="descri">
+                Category: <b>{{item.category.name}}</b>
+                <br />
+                Avilablity:
+                <b>{% if item.is_available %}YES{% else %}NO{% endif %}</b>
+                <br />
+                <!-- Vegetarian -->
+                {% if item.type == "Veg" %}
+                <svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="5" y="5" width="90" height="90" fill="none" stroke="#4CAF50" stroke-width="4" rx="5" ry="5" />
+                  <circle cx="50" cy="50" r="25" fill="#4CAF50" />
+                </svg>
+                <b>Veg</b>
+                {% elif item.type == "Non-Veg" %}
+                <svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="5" y="5" width="90" height="90" fill="none" stroke="#f44336" stroke-width="4" rx="5" ry="5" />
+                  <circle cx="50" cy="50" r="25" fill="#f44336" />
+                </svg>
+                <b>Non Veg</b>
+                {% else %}
+                <svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="5" y="5" width="90" height="90" fill="none" stroke="#2196F3" stroke-width="4" rx="5" ry="5" />
+                  <circle cx="50" cy="50" r="25" fill="#2196F3" />
+                </svg>
+                <b>Drink</b>
+                {% endif %}
+                <br>
+                Serving(s): <br>
+                {% for size in item.item_sizes.all %}
+                  {% if size.is_default %}
+                    <b>{{ size.size }} - ₹{{ size.price }}</b><span style="color: green; font-size: 0.9em;"> (Recommended)</span><br>
+                  {% else %}
+                    <b>{{ size.size }} - ₹{{ size.price }}</b><br>
+                  {% endif %}
+                {% endfor %}
+              </p>
+              <div class="inner-flex">
+                {% for size in item.item_sizes.all %}
+                {% if size.is_default %}
+                <div class="price-of-item">
+                  <p class="price">₹{{size.price}}</p>
+                </div>
+                {% endif %}
+                {% endfor %}
+                <!-- Add to Cart Button -->
+                <div class="add-to-cart-btn" id="cart-container-{{ item.id }}" onclick="event.stopPropagation()">
+                  {% if item.item_sizes.count == 1 %}
+                  {% with single_size=item.item_sizes.first.size %}
+                  <button
+                    onclick="increaseQuantity(Number('{{item.id}}'), '{{single_size}}',true); event.stopPropagation();"
+                    class="add-to-cart">
+                    Add to Cart
+                  </button>
+                  {% endwith %}
+                  {% else %}
+                  <button onclick="showPopup('{{item.id}}'); event.stopPropagation();" class="add-to-cart">
+                    Add to Cart
+                  </button>
+                  {% endif %}
+                  <!-- <button
+                  onclick="showPopup('{{item.id}}'); event.stopPropagation();"
+                    class="add-to-cart">
+                      Add to Cart
+                  </button> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- modifier START -->
+        <!-- Select variant -->
+        <div class="overlay" onclick="closePopup('{{item.id}}',null)" id="overlay-{{item.id}}"></div>
+        <div class="popup sizePopup" id="sizePopup-{{item.id}}">
+          <div>
+            <h3>Select Size</h3>
+            {% for size in item.item_sizes.all %}
+            <div class="ds-content">
+              <div class="text-desc">
+                <label for="ch1" class="text">{{size.size}}</label>
+              </div>
+              <div style="display: flex; gap: 20px;">
+                <small>₹{{size.price}}</small>
+                <label class="checkBox">
+                  <input type="radio" id="size_{{size.id}}" name="size_{{item.id}}" value="{{size.size}}" />
+                  <div class="transition"></div>
+                </label>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <div class="botom-btn-variant">
+            <button class="close-btn" onclick="closePopup('{{item.id}}','apply')">Apply</button>
+          </div>
+        </div>
+
+        <!-- modifier END -->
+        {% endfor %}
+        {% else %}
+        <div style="margin: auto; width: 90%; text-align: center;">
+          <img style="width: 95%; margin: auto;" src="{% static 'images/not-found.png' %}" alt="Not found" srcset="">
+          <br>
+          <span style="font-weight: 600;"> 🍽️ Oops! We couldn't find any matching dishes. Explore other delicious
+            options!</span>
+        </div>
+        {% endif %}
+        <!-- Item end -->
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Item end -->
+<div class="waiter-bell-wrapper">
+  <button class="call-waiter-btn" onclick="toggleWaiterBox()" style="background-color:#2b4035">
+    <!-- Bell Icon -->
+ <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="white" viewBox="0 0 24 24">
+      <path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6V9a6 6 0 10-12 0v7l-2 2v1h16v-1l-2-2z" />
+    </svg>
+  </button>
+
+  <!-- Sliding Box -->
+  <div class="waiter-call-box" id="waiterBox" style="background-color:#2b4035; color:#fff">
+    <p style="margin-bottom: 5px;"><strong>Thanks For Callin !</strong></p>
+  </div>
+</div>
+
+
+<style>
+   html, body {
+    overflow: auto;
+    -ms-overflow-style: none;  
+        scrollbar-width: none;     
+  }
+
+  html::-webkit-scrollbar, 
+  body::-webkit-scrollbar {
+    display: none;             
+  }
+.waiter-bell-wrapper {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  z-index: 9999;
+}
+
+.call-waiter-btn {
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 14px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.waiter-call-box {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  background-color: #fff;
+  color: #333;
+  padding: 10px 14px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  min-width: 180px;
+  opacity: 0;
+  transform: translateX(120%);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.waiter-call-box.show {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+.scroll-info {
+  position: fixed;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  backdrop-filter: blur(8px);
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: bottom 0.6s ease;
+  z-index: 9999;
+}
+.scroll-info.show {
+  bottom: 140px;
+}
+
+
+</style>
+
+
+<!-- Scroll Info Box -->
+<div id="scrollInfoBox" class="scroll-info">
+  <p><strong>Want service at your table? </strong><br>Press the bell icon.</p>
+</div>
+
+
+<!-- Prev Modifier -->
+<div id="blur-bg" class="overlay" onclick="closeOrderSummaryPopup()"></div>
+<div id="prev-popup-id" class="prev-popup prev-sizePopup">
+  <div class="prev-popup-content">
+    <h3>Manage your order</h3>
+    <div id="prev-popup-items">
+    </div>
+  </div>
+  <div class="botom-btn-variant">
+    <button class="close-btn" onclick="closeOrderSummaryPopup()">Apply</button>
+  </div>
+</div>
+
+<!-- WAITER CALL API -->
+<script>
+  function waiter_call_api() {
+    fetch("{% url 'waiter_call' RST.id %}",{
+      method: "POST",
+      headers:{
+        "X-CSRFToken": "{{ csrf_token }}",
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({table:"{{ TABLE }}"})
+    }).then(async (response) =>{
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Waiter call success:", data);
+      } else {
+        console.warn("Waiter call failed:", data);
+        alert(data.error || "Failed to call waiter.");
+      }
+      
+    }).catch(error =>{
+      console.error("Error: ",error)
+      alert("Something Went Wrong")
+    })
+  }
+
+  function toggleWaiterBox() {
+    const box = document.getElementById("waiterBox");
+    box.classList.add("show");
+    waiter_call_api()
+    setTimeout(() => {
+      box.classList.remove("show");
+    }, 2000);
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const scrollInfoBox = document.getElementById("scrollInfoBox");
+    const allItemsHeading = document.querySelector("h4"); // Or use a better selector if needed
+    let shown = false;
+
+    // WAITER SCROLL MESSAGE
+    window.addEventListener("scroll", function () {
+      const scrollY = window.scrollY;
+      const allItemsOffset = allItemsHeading?.offsetTop || 500;
+
+      if (scrollY >= allItemsOffset && !shown) {
+        scrollInfoBox.classList.add("show");
+        shown = true;
+        setTimeout(() => {
+          scrollInfoBox.classList.remove("show");
+        }, 4000);
+      }
+    });
+
+  });
+</script>
+
+
+<!-- Checkout Box -->
+<div id="orderButtonContainer" style="display: none">
+  <div class="bg-btn-check">
+    <a href="{% url 'order_summary' restaurantID=RST.id tableNo=TABLE %}" class="btn-link">
+      <button class="order-btn neu-button">Proceed to Order</button>
+    </a>
+    <button class="delete-btn neu-delete" onclick="localStorage.clear(); location.reload()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="white" viewBox="0 0 24 24">
+        <path d="M3 6h18v2H3V6zm2 3h14l-1.5 13h-11L5 9zm5 2v8h2v-8H10zm4 0v8h2v-8h-2z" />
+      </svg>
+    </button>
+  </div>
+</div>
+
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+  </script>
+
+<script src="{% static 'js/starter/index.js' %}"></script>
+
+
+<!-- SECURITY BLOCK -->
+{% include 'customer/security_block.html' %}
+
+{% endblock BodyContent %}

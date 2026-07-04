@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Success</title>
+    <link rel="stylesheet" href="{% static 'css/modern/placed_order.css' %}" />
+  </head>
+  <body>
+    <div class="card">
+      <div class="header">
+        <div class="image">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g
+              id="SVGRepo_tracerCarrier"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></g>
+            <g id="SVGRepo_iconCarrier">
+              <path
+                d="M20 7L9.00004 18L3.99994 13"
+                stroke="#ffffff"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </g>
+          </svg>
+        </div>
+
+        <style>
+          /* @import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light+Two&display=swap');
+          .title{
+            font-family: 'Shadows Into Light Two', cursive;
+          } */
+           @import url('https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap');
+           .title{
+            font-family: 'Tangerine';
+            font-size: 2.5rem;
+            font-weight: bolder;
+           }
+        </style>
+        <div class="content">
+
+
+          <span class="title"><i>Order Placed</i></span>
+          <p class="message">
+            Your delicious meal is on the way
+            <br />
+            <b>Table No. {{table|stringformat:"02d"}}</b>
+            <br />
+          </p>
+          <h2>
+            Order No.
+            <br />
+            <b>{{orderNo}}</b>
+          </h2>
+        </div>
+        <div class="actions">
+          <a href="{% url 'menu_items' restaurantID=RST.id tableNo=table %}"><button class="history" type="button">Back to Home</button></a>
+          <a href="{% url 'order_details' restaurantID=RST.id tableNo=table %}"><button class="track" type="button" style="border: 2px solid white">View Order Details</button></a>
+        </div>
+      </div>
+    </div>
+    <script>
+      localStorage.clear();
+    </script>
+
+<!-- SECURITY BLOCK -->
+{% include 'customer/security_block.html' %}
+
+
+  </body>
+</html>

@@ -1,0 +1,548 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{restInstance.name}} - Menu Tags</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Feather Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/staff/index.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'css/staff/categories.css' %}">
+    <link rel="stylesheet" href="{% static 'css/staff/table_qr.css' %}">
+    <link rel="stylesheet" href="{% static 'css/staff/footer.css' %}">
+</head>
+<style>
+    html,
+    body {
+        overflow: auto;
+        -ms-overflow-style: none;
+        /* Internet Explorer 10+ */
+        scrollbar-width: none;
+        /* Firefox */
+    }
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+        display: none;
+        /* Chrome, Safari, Opera */
+    }
+</style>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'management-home' restID %}">{{restInstance.name}}</a>
+            <div class="d-flex align-items-center" style="padding-right: 10px;">
+                <a href="{% url 'management-profile' restID %}" style="padding-right: 10px;"
+                    class="profile-icon d-flex align-items-center justify-content-center text-white me-2">
+                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center"
+                        style="width: 35px; height: 35px; overflow: hidden;">
+                        <img id="profilePreview" src="{{restInstance.display_picture.url}}" alt="DP"
+                            style="width: 100%; height: 100%; object-fit: cover;" />
+                    </div>
+                </a>
+                <a href="{% url 'management-logout' restID %}">
+                    <div class="logout">
+                        <img width="20" height="20" src="https://img.icons8.com/ios/50/exit--v1.png" alt="exit--v1" />
+                        <span class="logout-text">Logout</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 d-none d-md-block sidebar" style="padding-top: 6rem;">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'management-home' restID %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-home">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                            <span class="ms-2 d-none d-md-inline">Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'management-orders' restID %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-shopping-bag">
+                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                <path d="M16 10a4 4 0 0 1-8 0"></path>
+                            </svg>
+                            <span class="ms-2 d-none d-md-inline">Orders</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'management-menu' restID %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-menu">
+                                <line x1="3" y1="12" x2="21" y2="12"></line>
+                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                <line x1="3" y1="18" x2="21" y2="18"></line>
+                            </svg>
+                            <span class="ms-2 d-none d-md-inline">Menu</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'management-table' restID %}">
+                            <img width="18" height="18" src="https://img.icons8.com/material-outlined/24/qr-code.png"
+                                alt="qr-code" />
+                            <span class="ms-2 d-none d-md-inline">Table/QR</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'management-insights' restID %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-bar-chart-2">
+                                <line x1="18" y1="20" x2="18" y2="10"></line>
+                                <line x1="12" y1="20" x2="12" y2="4"></line>
+                                <line x1="6" y1="20" x2="6" y2="14"></line>
+                            </svg>
+                            <span class="ms-2 d-none d-md-inline">Insight</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Mobile sidebar (visible only on small screens) -->
+            <div class="col-12 d-md-none mb-3">
+                <div class="navbar navbar-expand navbar-light bg-transparent shadow-none rounded p-3">
+                    <ul class="navbar-nav w-100 justify-content-between">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'management-home' restID %}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-home">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'management-orders' restID %}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-shopping-bag">
+                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'management-menu' restID %}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-menu">
+                                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'management-table' restID %}">
+                                <img width="18" height="18"
+                                    src="https://img.icons8.com/material-outlined/24/qr-code.png" alt="qr-code" />
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'management-insights' restID %}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-bar-chart-2">
+                                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                                </svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <div class="col-md-10 content">
+                <h2 class="orders-title" style="padding-left:40px; font-weight: bold;">Menu - Tags</h2>
+                <div class="container">
+                    <!-- Tabs for Items/Categories -->
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'management-menu' restID %}">Items</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'management-category' restID %}">Categories</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'management-tags' restID %}">Tags</a>
+                        </li>
+                    </ul>
+
+                    <!-- ADD TAG -->
+                    <button type="button" class="add-table-btn" data-bs-toggle="collapse"
+                        data-bs-target="#addTableForm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-plus-circle">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                        Create custom tag
+                    </button>
+
+                    <!-- Add Tag Name (Collapsed) -->
+                    <div class="collapse add-table-form" id="addTableForm">
+                        <form method="post" action="{% url 'management-tags' restID %}" class="card card-body">
+                            {% csrf_token %}
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <label for="id_table_number" class="form-label">Tag Name</label>
+                                    <input type="text" class="form-control" id="id_table_number" name="tag_name"
+                                        required placeholder="Create your custom tag name" />
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <button type="submit" class="btn btn-primary">Make it</button>
+                                <button type="button" class="btn btn-outline-secondary ms-2" data-bs-toggle="collapse"
+                                    data-bs-target="#addTableForm">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+
+                    <!-- Tags Table -->
+                    {% if tags %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="padding: .5rem 1rem;">tag id</th>
+                                    <th style="padding: .5rem 1rem;">Name</th>
+                                    <th>Remove/Edit</th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for tag in tags %}
+                                <tr>
+                                    <td style="padding: .5rem 1rem;">
+                                        <span class="d-sm-none">tag id:</span>
+                                        {{tag.id|stringformat:"03d"}}
+                                    </td>
+                                    <td style="padding: .5rem 1rem;">
+                                        <span class="d-sm-none me-1">Name:</span>
+                                        <span class="tag-name-display">{{ tag.name }}</span>
+                                        <input type="text" name="name"
+                                            class="form-control form-control-sm tag-name-input d-none"
+                                            value="{{ tag.name }}" required>
+                                    </td>
+                                    <td class="text-end d-flex align-items-end flex-wrap gap-1">
+                                        <div class="delete-wrapper text-center"></div>
+                                        <span class="remove-label d-none d-sm-block"></span>
+                                        <button class="btn del-button" type="submit" data-tagid="{{ tag.id }}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25"
+                                                height="25" viewBox="0 0 50 50">
+                                                <path
+                                                    d="M 21.800781 10.099609 C 20.916781 10.099609 20.199219 10.815219 20.199219 11.699219 L 20.199219 12.099609 L 9.8007812 12.099609 C 9.5247813 12.099609 9.3007812 12.323609 9.3007812 12.599609 C 9.3007812 12.875609 9.5247813 13.099609 9.8007812 13.099609 L 11.740234 13.099609 L 13.857422 38.507812 C 14.017422 40.410812 15.636922 41.900391 17.544922 41.900391 L 32.455078 41.900391 C 34.363078 41.900391 35.982625 40.410812 36.140625 38.507812 L 38.257812 13.099609 L 40.199219 13.099609 C 40.476219 13.099609 40.699219 12.875609 40.699219 12.599609 C 40.699219 12.323609 40.475219 12.099609 40.199219 12.099609 L 29.800781 12.099609 L 29.800781 11.699219 C 29.800781 10.815219 29.083219 10.099609 28.199219 10.099609 L 21.800781 10.099609 z M 12.742188 13.099609 L 37.255859 13.099609 L 35.144531 38.423828 C 35.028531 39.812828 33.848078 40.900391 32.455078 40.900391 L 17.542969 40.900391 C 16.150969 40.900391 14.969516 39.811828 14.853516 38.423828 L 12.742188 13.099609 z">
+                                                </path>
+                                            </svg>
+                                        </button>
+                    </div>
+
+                    <!-- Edit -->
+                    <button type="button" class="btn btn-sm btn-edit edit-btn rounded-circle p-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-edit-2">
+                            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Save -->
+                    <button type="submit" data-tagid="{{ tag.id }}"
+                        class="btn btn-success d-none save-btn rounded-circle p-0" style="width: 32px; height: 32px;">
+                        <i class="material-icons" style="font-size:15px;">check</i>
+                    </button>
+
+                    <!-- Cancel -->
+                    <button type="button" class="btn btn-secondary d-none cancel-btn rounded-circle p-0"
+                        style="width: 32px; height: 32px;">
+                        <i class="material-icons" style="font-size:15px;">close</i>
+                    </button>
+                    </td>
+
+
+
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div style="margin: auto; width: 90%; text-align: center;">
+                    <img style="width: 20%; margin: auto;" src="{% static 'images/not-found.png' %}" alt="Not found"
+                        srcset="">
+                    <br>
+                    <span style="font-weight: 600;"> Oops! You have not added any tags for your restaurant</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    </div>
+    <footer class="footer">a <strong>CRE8MARK</strong> production</footer>
+    <style>
+        @media (max-width: 576px) {
+            table thead {
+                display: none;
+            }
+
+            table tbody tr {
+                display: block;
+                margin-bottom: 1rem;
+                border: 1px solid #dee2e6;
+                padding: 0.75rem;
+                border-radius: 0.5rem;
+            }
+
+            table tbody td {
+                display: flex;
+                justify-content: space-between;
+                padding: 0.5rem 0;
+            }
+
+            .tag-name-input {
+                width: 100%;
+            }
+
+            .edit-btn,
+            .save-btn,
+            .cancel-btn {
+                margin-left: 0.25rem;
+            }
+
+            .text-end {
+                justify-content: end;
+                display: flex;
+                gap: 0.25rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .text-end {
+                flex-direction: row !important;
+                justify-content: flex-end !important;
+                flex-wrap: wrap;
+                gap: 0.25rem;
+            }
+
+            .text-end .delete-wrapper {
+                display: flex;
+                align-items: center;
+            }
+
+            .text-end .remove-label {
+                display: none !important;
+                /* Hide "Remove" text label */
+            }
+
+            .text-end button {
+                margin: 0 !important;
+            }
+        }
+    </style>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- NEW ORDER RECEIVED NOTIFICATION -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1055">
+        <div id="newOrderToast" class="toast bg-success text-white" role="alert" data-bs-delay="5000">
+        <div class="toast-body">
+            🛎️ <strong>New Order Received!</strong> Check the Preparing tab.
+        </div>
+        </div>
+    </div>
+
+    <!-- WAITER CALLING NOTIFICATION -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
+        <div id="waiterToast" class="toast bg-success text-white" role="alert" data-bs-delay="5000">
+        <div class="toast-body">
+            🛎 Waiter called at <strong>Table <span id="waiterTable"></span></strong>
+        </div>
+        </div>
+    </div>
+
+    <script>
+
+        document.querySelectorAll('.edit-btn').forEach(function (editBtn) {
+            editBtn.addEventListener('click', function () {
+                const row = this.closest('tr');
+                row.querySelector('.tag-name-display').classList.add('d-none');
+                row.querySelector('.tag-name-input').classList.remove('d-none');
+                row.querySelector('.save-btn').classList.remove('d-none');
+                row.querySelector('.cancel-btn').classList.remove('d-none');
+                this.classList.add('d-none');
+            });
+        });
+
+        document.querySelectorAll('.cancel-btn').forEach(function (cancelBtn) {
+            cancelBtn.addEventListener('click', function () {
+                const row = this.closest('tr');
+                const input = row.querySelector('.tag-name-input');
+                input.value = row.querySelector('.tag-name-display').innerText;
+                row.querySelector('.tag-name-display').classList.remove('d-none');
+                input.classList.add('d-none');
+                row.querySelector('.save-btn').classList.add('d-none');
+                row.querySelector('.edit-btn').classList.remove('d-none');
+                this.classList.add('d-none');
+            });
+        });
+
+        document.querySelectorAll('.save-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const tagID = this.dataset.tagid;
+                const row = this.closest('tr');
+                const input = row.querySelector('.tag-name-input');
+                const newName = input.value.trim();
+
+                if (newName === "") {
+                    alert("Name cannot be empty.");
+                    return;
+                }
+
+                fetch(`tag/edit/${tagID}`, {
+                    method: "POST",
+                    headers: {
+                        'X-CSRFTOKEN': "{{ csrf_token }}",
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name: newName })
+                }).then((result) => {
+                    if (result.redirected) {
+                        window.location.href = result.url;
+                    } else {
+                        alert("Failed to renaming")
+                    }
+                }).catch((err) => {
+                    console.error("Error:", error);
+                    alert("Something went wrong.");
+                });
+            })
+        })
+
+        document.querySelectorAll('.del-button').forEach((btn) => {
+            btn.addEventListener("click", function () {
+                const tagID = this.dataset.tagid;
+                if (!confirm("Are you sure you want to delete this tag?")) return;
+                fetch(`tag/del/${tagID}`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}",
+                        "Content-Type": "application/json",
+                    },
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // window.location.href = "{% url 'management-menu' restID %}";
+                            const row = btn.closest("tr");
+                            row.remove();
+                        } else {
+                            alert("Failed to delete tag.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("Something went wrong.");
+                    });
+
+            })
+        });
+
+
+    </script>
+
+    <!-- ORDER AND WAITER SOCKET -->
+  <script>
+    document.addEventListener("DOMContentLoaded",()=>{
+      function trackNewOrder(orderId) {
+        let stored = JSON.parse(localStorage.getItem("new_orders") || "[]");
+        if (!stored.includes(orderId)) {
+          stored.push(orderId);
+          localStorage.setItem("new_orders", JSON.stringify(stored));
+        }
+      }
+
+
+      // WebSocket setup
+      window.addEventListener("load", () => {
+        const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+        const liveMessageSocket = new WebSocket(`${wsScheme}://${window.location.host}/ws/live/message/socket/{{ restID }}/`)
+
+        liveMessageSocket.onopen = () => console.log("liveMessage WebSocket connected");
+        liveMessageSocket.onclose = () => console.warn("liveMessage WebSocket closed");
+        liveMessageSocket.onerror = (e) => console.error("liveMessage WebSocket error", e);
+        
+
+        // Socket Connection for Order & Waiter Call both
+        liveMessageSocket.onmessage = (event) =>{
+          try{
+            const data = JSON.parse(event.data);
+            if (data.type === "order_notification") {
+              const order = data.order;
+              if (!order) return;
+
+              // Show toast
+              const toastEl = document.getElementById('newOrderToast');
+              if (toastEl) new bootstrap.Toast(toastEl).show();
+
+              trackNewOrder(order.id);
+            }
+            
+            else if (data.type === "waiter_notification") {
+              const tableNo = data.table;
+              
+              const waiterToast = document.getElementById("waiterToast");
+              const waiterTableSpan = document.getElementById("waiterTable");
+
+              if (waiterToast && waiterTableSpan) {
+                waiterTableSpan.textContent = tableNo;
+                new bootstrap.Toast(waiterToast).show();
+              }
+            }
+          
+          }catch (err) {
+            alert("[WS] Message parse error:", err)
+            console.error("[WS] Message parse error:", err);
+          }
+        }
+      });
+    });
+  </script>
+
+
+</body>
+
+</html>

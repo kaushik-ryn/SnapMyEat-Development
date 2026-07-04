@@ -1,0 +1,61 @@
+{% extends "customer/starter/base.html" %}
+{% load static %}
+{% block title %}Choose your fav Category{% endblock title %}
+{% block HeadCss %}
+
+  <!-- Category Drop CSS -->
+<link rel="stylesheet" href="{% static 'css/starter/categoryPage.css' %}?v=10">
+{% endblock HeadCss %}
+
+{% block RST-Name %} {{ RST.name }} {% endblock RST-Name %}
+{% block TableNo %} {{ TABLE|stringformat:"02d" }} {% endblock TableNo %}
+{% block ButtonCMD %}
+<a href="{% url 'menu_items' restaurantID=RST.id tableNo=TABLE %}">
+  <button class="catBtn">Back</button>
+</a>
+{% endblock ButtonCMD %}
+
+{% block BodyContent %}
+
+
+<!-- Categories List Start -->
+ <style>
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
+
+.dsFontH {
+  font-family: "Dancing Script", sans-serif;
+  font-size: 3rem; 
+}
+ </style>
+ <br>
+
+  <div class="category-grid">
+    <!-- VIEW ALL -->
+    <a href="{% url 'menu_items' restaurantID=RST.id tableNo=TABLE %}?tags=All">
+      <div class="category-card">          
+        <img src="{% static 'images/starter/category/all_item.jpg' %}" alt="Category 1" />
+        <h3 class="dsFontH" style="font-size: 2rem;" >All Items</h3>
+        <!-- DESCRIPTIONN SHOULD BE MAX 2 LINES, ITALIC, CURSIVE -->
+        <p style="padding: 2%;">A complete selection of every delicious dish available, offering something for every taste and craving.</p> 
+      </div>
+    </a>
+
+    {% for category in  CAT %}
+    
+      <a href="{% url 'menu_items' restaurantID=RST.id tableNo=TABLE %}?category={{category.name}}">
+        <div class="category-card">
+          <img src="{% static category.image_filename %}" alt="{{ category.name }}">
+          <h3 class="dsFontH"  style="font-size: 2rem;">{{category.name}}</h3>
+          <!-- DESCRIPTIONN SHOULD BE MAX 2 LINES, ITALIC, CURSIVE -->
+          <p style="padding: 2%;">{{category.description}}</p> 
+        </div>
+      </a>
+    
+    {% endfor %}
+  </div>
+<!-- Categories list end -->
+
+<!-- SECURITY BLOCK -->
+{% include 'customer/security_block.html' %}
+  
+{% endblock BodyContent %}

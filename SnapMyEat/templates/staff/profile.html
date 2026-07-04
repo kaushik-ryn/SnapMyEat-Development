@@ -1,0 +1,326 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>{{restaurant.name}}</title>
+
+  <!-- Google Fonts & Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'css/staff/profile.css' %}">
+
+  <style>
+    body,
+    html {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
+    #closeIcon {
+      top: -40px;
+      right: 10px;
+      position: absolute;
+      z-index: 10;
+      background: transparent;
+      padding: 4px;
+      border-radius: 50%;
+      transition: opacity 0.3s;
+    }
+
+    #closeIcon:hover {
+      background-color: #f1f1f1;
+    }
+
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.03);
+    }
+
+    .section-title {
+      font-weight: 600;
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      color: #4a3b31;
+    }
+
+    .info-label {
+      font-weight: 500;
+      margin-right: 6px;
+      color: #555;
+    }
+
+    .stat-card {
+      padding: 1.2rem;
+      text-align: center;
+      border-radius: 0.5rem;
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #343a40;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: #6c757d;
+    }
+
+    .template-card {
+      border: 1px solid #ddd;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+      background-color: #ffffff;
+    }
+
+    .template-image {
+      height: 150px;
+      background-color: #f8f9fa;
+      border-radius: 0.25rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .edit-button {
+      background-color: #C08261;
+      color: white;
+      border: none;
+    }
+
+    .edit-button:hover {
+      background-color: #a06247;
+    }
+  </style>
+  <style>
+    .object-fit-cover {
+      object-fit: cover;
+    }
+
+    .change-dp-label {
+      background-color: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      cursor: pointer;
+      border-radius: 0.375rem;
+      /* match Bootstrap's default border radius */
+    }
+
+    .profile-image-wrapper:hover .change-dp-label {
+      opacity: 1;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="container py-5">
+    <header class="mb-4">
+      <div class="d-flex flex-column flex-sm-row align-items-center justify-content-between">
+        <div class="d-flex align-items-center mb-3 mb-sm-0">
+          <h1 class="h3 fw-bold mb-0" style="color: #4a3b31;">{{restaurant.name}}'s Profile</h1>
+        </div>
+      </div>
+    </header>
+
+    <!-- Close button -->
+    <a href="javascript:history.back()">
+      <span id="closeIcon" class="material-icons text-secondary position-absolute">close</span>
+    </a>
+
+    <!-- Restaurant Info Card -->
+    <!-- Restaurant Info Card with Close Button -->
+    <div class="position-relative mb-4">
+      <!-- Close button (aligned to top-right of card) -->
+      <a href="javascript:history.back()" class="position-absolute" style="top: -12px; right: -12px; z-index: 10;">
+        <span id="closeIcon" class="material-icons text-dark rounded-circle  p-1">
+          close
+        </span>
+      </a>
+
+      <div class="card">
+        <div class="d-flex flex-column flex-md-row align-items-start" style="gap:20px;">
+          <div class="profile-image-wrapper position-relative" style="max-width: 100%; width: 160px;">
+            <div class="ratio ratio-1x1 rounded border border-2 overflow-hidden" style="border-color: #C08261;">
+              <img id="profileImage" src="{{restaurant.display_picture.url}}"  alt="Restaurant Profile"
+                class="w-100 h-100 object-fit-cover" />
+
+              <!-- Change DP overlay shown on hover -->
+              <label for="dpInput"
+                class="change-dp-label position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center">
+                Change DP
+              </label>
+            </div>
+            <input type="file" id="dpInput" accept="image/*" style="display: none;" />
+            <input type="hidden" id="csrfToken" value="{{ csrf_token }}">
+          </div>
+
+
+          <div class="flex-grow-1">
+            <h2 class="section-title">
+              <span class="material-icons">storefront</span> Restaurant Information
+            </h2>
+
+            <div class="row">
+              <div class="col-sm-6 mb-2"><span class="info-label">Name:</span>{{ restaurant.name }}</div>
+              <div class="col-sm-6 mb-2"><span class="info-label">Email:</span>{{ restaurant.email }}</div>
+              <div class="col-sm-6 mb-2"><span class="info-label">Contact:</span>{{ restaurant.phone }}</div>
+              <div class="col-sm-6 mb-2"><span class="info-label">GSTIN:</span>27ABCDE1234F1Z5</div>
+              <div class="col-sm-6 mb-2"><span class="info-label">FSSAI License:</span>12345678901234</div>
+              <div class="col-sm-6 mb-2"><span class="info-label">Establishment Code:</span>ESTB9876</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Owner Info Card -->
+    <div class="card mb-4">
+      <h2 class="section-title"><span class="material-icons">person</span> Owner Information</h2>
+      <div class="row">
+        <div class="col-sm-4 mb-2"><span class="info-label">Name:</span>{{restaurant.owner.full_name}}</div>
+        <div class="col-sm-4 mb-2"><span class="info-label">Contact:</span>{{restaurant.owner.phone_number}}</div>
+        <div class="col-sm-4 mb-2"><span class="info-label">Email:</span>{{restaurant.owner.email}}</div>
+      </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="row mb-4">
+      <div class="col-6 col-md-3" style="margin-bottom: 15px">
+        <div class="stat-card">
+          <div class="stat-value">{{restaurant.tables.count}}</div>
+          <div class="stat-label">Total Tables</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="stat-value">{{restaurant.item_listings.count}}</div>
+          <div class="stat-label">Total Items</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="stat-value">{{restaurant.category_listings.count}}</div>
+          <div class="stat-label">Categories</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="stat-value">{{restaurant.itemtag_set.count}}</div>
+          <div class="stat-label">Tags</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Templates Section -->
+    <div class="card mb-4">
+      <h2 class="section-title"><span class="material-icons">dashboard_customize</span> Menu Templates</h2>
+      <div class="row">
+        <div class="col-lg-8">
+          <h5 class="fw-semibold m-3" style="color: #4a3b31;">Selected Template</h5>
+          <div class="template-card">
+            <div class="template-image"><span class="material-icons fs-1">image</span></div>
+            <div class="template-name h5">{{ selected_template.name }}</div>
+            <p class="template-description">{{selected_template.description}}</p>
+            <button class="btn edit-button w-100 mt-3"><span class="material-icons me-2">bolt</span> Customize
+              Template</button>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <h5 class="fw-semibold m-3" style="color: #4a3b31;">Other Templates</h5>
+          <div class="overflow-auto" style="max-height: 400px;">
+            {% for key, data in template_names.items %}
+            {% if key != restaurant.template %}
+            <div class="template-card mb-3">
+              <div class="template-image"><span class="material-icons fs-3">image</span></div>
+              <div class="template-name fw-bold">{{data.name}}</div>
+              <p class="template-description small">{{data.description}}</p>
+              <button class="btn btn-outline-secondary btn-sm w-100 mt-2">Select</button>
+            </div>
+            {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Scroll effect for close icon -->
+  <script>
+    const closeIcon = document.getElementById("closeIcon");
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 50) {
+        closeIcon.style.opacity = 0;
+        closeIcon.style.pointerEvents = "none";
+      } else {
+        closeIcon.style.opacity = 1;
+        closeIcon.style.pointerEvents = "auto";
+      }
+    });
+
+    // profile image 
+    const input = document.getElementById('dpInput');
+    const image = document.getElementById('profileImage');
+    const csrfToken  = document.getElementById('csrfToken').value;
+    input.addEventListener('change', function () {
+      const file = this.files[0];
+      if (file) {
+        const maxSize = 700 * 1024; // 700 KB
+        if (file.size > maxSize) {
+          alert("Image size should not exceed 700 KB!");
+          this.value = '';
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('display_picture', file);
+
+        fetch("{% url 'management-profile' restaurant.id %}", {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrfToken
+          },
+          body: formData
+        })
+        .then(response => {
+          if (!response.ok) throw new Error("Upload failed");
+          return response.json();
+        })
+        .then(data => {
+          image.src = data.new_image_url;
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          alert("Failed to update profile picture.");
+        });
+      }
+    });
+  </script>
+
+</body>
+
+</html>

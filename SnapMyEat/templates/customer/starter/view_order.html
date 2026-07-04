@@ -1,0 +1,33 @@
+{% extends "customer/starter/base.html" %}
+{% load static %}
+{% block title %}Order History{% endblock title %}
+{% block HeadCss %}
+  <!-- CSS -->
+<link rel="stylesheet" href="{% static 'css/starter/viewOrder.css' %}?v=2">
+{% endblock HeadCss %}
+{% block RST-Name %} {{ RST.name }} {% endblock RST-Name %} 
+{% block TableNo %} {{ table|stringformat:"02d" }} {% endblock TableNo %} 
+{% block ButtonCMD %}
+<!-- href="#" -->
+<a
+href="{% url 'menu_items' restaurantID=RST.id tableNo=TABLE %}"
+>
+<button class="catBtn">Back</button>
+</a>
+{% endblock ButtonCMD %}
+{% block BodyContent %}
+<!-- Content Start -->
+<div class="container">
+  <h2>Enter Your Order Number</h2>
+  <form action="{% url 'order_details' restaurantID=RST.id tableNo=TABLE %}" method="POST">
+    {% csrf_token %}
+    <input type="number" id="orderNumber" name="OrderNumber" placeholder="Order No.">
+  <button class="submit-btn" type="submit">Submit</button>
+  </form>
+</div>
+
+<!-- SECURITY BLOCK -->
+{% include 'customer/security_block.html' %}
+
+
+{% endblock BodyContent %}
