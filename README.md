@@ -251,5 +251,3 @@ GitHub: https://github.com/kaushik-ryn
 This project is intended for educational, research, and demonstration purposes.
 
 ---
-
-# ⭐ If you like this project, don't forget to Star the repository!
