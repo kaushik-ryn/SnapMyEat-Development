@@ -1,5 +1,5 @@
 # 🍽️ SnapMyEat - Restaurant Management System       
- 
+  
 SnapMyEat is a complete AI-powered Restaurant Management System designed to simplify restaurant operations while providing customers with a seamless digital dining experience.
   
 The platform enables restaurants to manage menus, orders, billing, customers, staff, QR-based table ordering, analytics, and much more from a single dashboard.
