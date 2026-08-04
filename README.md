@@ -1,5 +1,5 @@
 # 🍽️ SnapMyEat – AI-Powered Restaurant Management System   
-  
+   
 <p align="center">  
   <img src="https://img.shields.io/badge/Django-Framework-green?style=for-the-badge&logo=django" />
   <img src="https://img.shields.io/badge/Python-3.x-blue?style=for-the-badge&logo=python" />
