@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/badge/License-Educational-orange?style=for-the-badge" />
 </p>
  
-## 📖 Overview
+## 📖 Overview 
 
 **SnapMyEat** is an AI-powered Restaurant Management System designed to streamline restaurant operations while delivering a seamless digital dining experience.
 
